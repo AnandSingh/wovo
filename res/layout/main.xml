@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+android:id="@+id/widget28"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent"
+android:orientation="vertical"
+xmlns:android="http://schemas.android.com/apk/res/android">
+
+<ViewFlipper android:id="@+id/firstview"
+	android:layout_width="fill_parent"
+    android:layout_height="fill_parent">  
+        
+    <LinearLayout
+    	android:orientation="vertical"
+    	android:layout_width="fill_parent"
+    	android:layout_height="fill_parent"
+    	android:background="#000000">
+       	<Button
+   		android:id="@+id/ScanButton"
+   		android:layout_width="90px"
+   		android:layout_height="65px"
+   		android:layout_marginTop="35px"
+   		android:layout_marginLeft="110px"
+   		android:text="Scan">
+    	</Button>
+   </LinearLayout>
+   <LinearLayout
+		android:orientation="vertical"
+    	android:layout_width="fill_parent"
+    	android:layout_height="fill_parent"
+    	android:background="#000000">
+    	<ListView
+    	android:id="@+id/ListView01"
+    	android:layout_width="fill_parent"
+    	android:layout_height="200px">
+    	</ListView>
+    	<ProgressBar
+		android:id="@+id/ScanProgress"
+		android:layout_width="65px"
+		android:layout_height="65px"
+		android:layout_marginTop="40px"
+		android:layout_marginLeft="120px">
+		</ProgressBar>
+		<Button
+    	android:id="@+id/PlayButton"
+    	android:layout_width="90px"
+    	android:layout_height="65px"
+    	android:layout_marginTop="35px"
+    	android:layout_marginLeft="110px"
+    	android:text="Play">
+    	</Button>
+	</LinearLayout>
+    
+    
+    <ViewFlipper android:id="@+id/Lastview"
+	android:layout_width="fill_parent"
+    android:layout_height="fill_parent">  
+<AbsoluteLayout
+   		android:id="@+id/widget39"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <ImageButton
+		android:id="@+id/PauseButton"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_x="20px"
+		android:layout_y="382px">
+		</ImageButton>
+		<ImageButton
+		android:id="@+id/btn1"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_x="90px"
+		android:layout_y="382px">
+		</ImageButton>
+		
+        
+ <SurfaceView android:id="@+id/surface"
+        android:layout_width="100px"
+        android:layout_height="100px"
+        android:layout_marginTop="5px"
+        android:layout_gravity="center">
+ </SurfaceView>
+<!-- 		<ImageButton
+		android:id="@+id/btn3"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_x="160px"
+		android:layout_y="382px">
+		</ImageButton>
+		<ImageButton
+		android:id="@+id/btn4"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_x="230px"
+		android:layout_y="382px">
+		</ImageButton>
+		<ImageButton
+		android:id="@+id/btn5"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_x="300px"
+		android:layout_y="382px">
+		</ImageButton>-->
+		</AbsoluteLayout>
+		</ViewFlipper>
+        
+    </ViewFlipper>   
+
+</LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
