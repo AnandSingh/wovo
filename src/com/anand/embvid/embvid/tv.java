@@ -62,7 +62,7 @@ OnPreparedListener, OnVideoSizeChangedListener, SurfaceHolder.Callback{
     private MediaPlayer mMediaPlayer;
     private SurfaceView mPreview;
     private SurfaceHolder holder;
-    private String path = "/data/h264_15.3gp";//"/data/sample_mpeg4.mp4";
+    private String path = "/data/sample.3gp";//"/data/sample_mpeg4.mp4";
     private Bundle extras;
     private boolean mIsVideoSizeKnown = false;
     private boolean mIsVideoReadyToBePlayed = false;
@@ -161,9 +161,7 @@ OnPreparedListener, OnVideoSizeChangedListener, SurfaceHolder.Callback{
 	            //Set an animation from 
 	            vf.setAnimation(AnimationUtils.loadAnimation(v.getContext(), R.anim.slide_left));
 	            vf.showNext();
-	            Play();
-	         
-	        }
+	         }
 	         break;
 	        case R.id.btn1:
 	        {
@@ -280,17 +278,17 @@ OnPreparedListener, OnVideoSizeChangedListener, SurfaceHolder.Callback{
         mIsVideoSizeKnown = true;
         mVideoWidth = width;
         mVideoHeight = height;
-        //if (mIsVideoReadyToBePlayed && mIsVideoSizeKnown) {
-           // startVideoPlayback();
-        //}
+        if (mIsVideoReadyToBePlayed && mIsVideoSizeKnown) {
+            startVideoPlayback();
+        }
     }
 
     public void onPrepared(MediaPlayer mediaplayer) {
         Log.d(TAG, "onPrepared called");
         mIsVideoReadyToBePlayed = true;
-       // if (mIsVideoReadyToBePlayed && mIsVideoSizeKnown) {
-        //    startVideoPlayback();
-        //}
+        if (mIsVideoReadyToBePlayed && mIsVideoSizeKnown) {
+            startVideoPlayback();
+        }
     }
 
     public void surfaceChanged(SurfaceHolder surfaceholder, int i, int j, int k) {
