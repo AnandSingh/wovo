@@ -12,10 +12,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 //import android.widget.Toast;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -54,6 +56,7 @@ OnPreparedListener, OnVideoSizeChangedListener, SurfaceHolder.Callback{
     Button btnPlay;
     ImageButton btnPause;
     Button btnScan;
+    Spinner spnCountry;
     // private Button btnStop;
     tv m_tv;
     
@@ -122,11 +125,18 @@ OnPreparedListener, OnVideoSizeChangedListener, SurfaceHolder.Callback{
         btnScan = (Button) findViewById(R.id.ScanButton);
         btnPlay = (Button) findViewById(R.id.PlayButton);
         btnPause = (ImageButton) findViewById(R.id.PauseButton);
+        spnCountry = (Spinner) findViewById(R.id.spin_country);
+        
         lv1=(ListView)findViewById(R.id.ListView01);
        	// By using setAdpater method in listview we an add string array in list.
         //lv1.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1 , lv_arr));
         lv1.setAdapter(new EfficientAdapter(this));
 
+        //filling country list
+        ArrayAdapter adapter = ArrayAdapter.createFromResource(
+                this, R.array.country, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spnCountry.setAdapter(adapter);
         // On app load, the Pause button is disabled
       // btnPause.setEnabled(false);
        m_tv = this;

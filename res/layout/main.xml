@@ -9,21 +9,98 @@ xmlns:android="http://schemas.android.com/apk/res/android">
 <ViewFlipper android:id="@+id/firstview"
 	android:layout_width="fill_parent"
     android:layout_height="fill_parent">  
+    
+    <AbsoluteLayout
+		android:id="@+id/widget0"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		>
+		<Spinner
+		android:id="@+id/spin_country"
+		android:layout_width="200px"
+		android:layout_height="54px"
+		android:layout_x="62px"
+		android:layout_y="36px"
+		>
+		</Spinner>
+		<Spinner
+		android:id="@+id/spin_min"
+		android:layout_width="124px"
+		android:layout_height="54px"
+		android:layout_x="20px"
+		android:layout_y="172px"
+		>
+		</Spinner>
+		<Spinner
+		android:id="@+id/spin_max"
+		android:layout_width="124px"
+		android:layout_height="54px"
+		android:layout_x="181px"
+		android:layout_y="172px"
+		>
+		</Spinner>
+		<TextView
+		android:id="@+id/text_country"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Select the country"
+		android:layout_x="89px"
+		android:layout_y="11px"
+		>
+		</TextView>
+		<TextView
+		android:id="@+id/text_max"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Select Max Frequecy"
+		android:layout_x="168px"
+		android:layout_y="146px"
+		>
+		</TextView>
+		<TextView
+		android:id="@+id/text_min"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Select Min Frequecy"
+		android:layout_x="8px"
+		android:layout_y="146px"
+		>
+		</TextView>
+
+       	<Button
+   		android:id="@+id/ScanButton"
+   		android:layout_width="90px"
+   		android:layout_height="65px"
+   		android:layout_x="113px"
+   		android:layout_y="306px"
+   		android:text="Scan">
+    	</Button>
+	</AbsoluteLayout>
+    
+    
+    <!-- 
         
     <LinearLayout
     	android:orientation="vertical"
     	android:layout_width="fill_parent"
     	android:layout_height="fill_parent"
     	android:background="#000000">
-       	<Button
-   		android:id="@+id/ScanButton"
-   		android:layout_width="90px"
-   		android:layout_height="65px"
-   		android:layout_marginTop="35px"
-   		android:layout_marginLeft="110px"
-   		android:text="Scan">
-    	</Button>
-   </LinearLayout>
+    	 <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dip"
+        android:text="Please select a planet:"
+    />
+
+    <Spinner 
+        android:id="@+id/spin_country"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:drawSelectorOnTop="true"
+        android:prompt="@string/country_list"
+    />
+    	
+   </LinearLayout>-->
    <LinearLayout
 		android:orientation="vertical"
     	android:layout_width="fill_parent"

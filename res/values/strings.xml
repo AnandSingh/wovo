@@ -2,4 +2,5 @@
 <resources>
     <string name="hello">Hello World, tv!</string>
     <string name="app_name">Emb Tv !</string>
+    <string name="country_list">Choose a planet</string>
 </resources>
