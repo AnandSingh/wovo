@@ -69,6 +69,7 @@ private slots:
     void addParagraph(const QString &paragraph);
 
 private:
+    void atSpalshScreen();
     void createActions();
     void createMenus();
     void createToolBars();

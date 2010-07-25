@@ -85,6 +85,7 @@ private:
 
     QMenu *fileMenu;
     QAction *exitAction;
+
 };
 //! [0]
 

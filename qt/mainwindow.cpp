@@ -49,6 +49,7 @@
 //! [1]
 MainWindow::MainWindow()
 {
+//    atSplashScreen();
     textEdit = new QTextEdit;
     setCentralWidget(textEdit);
 
@@ -62,6 +63,27 @@ MainWindow::MainWindow()
 
     channelScan();
     setUnifiedTitleAndToolBarOnMac(true);
+}
+
+void MainWindow::atSpalshScreen() {
+/*	QSplashScreen *splash =
+	new QSplashScreen(QPixmap::fromMimeSource("splash.png"));
+	splash->show();
+	splash->message(QObject::tr("Setting up the main window..."),
+	Qt::AlignRight | Qt::AlignTop, Qt::white);
+	MainWindow mainWin;
+	app.setMainWidget(&mainWin);
+	splash->message(QObject::tr("Loading modules..."),
+	Qt::AlignRight | Qt::AlignTop, Qt::white);
+	loadModules();
+	splash->message(QObject::tr("Establishing connections..."),
+	Qt::AlignRight | Qt::AlignTop, Qt::white);
+	establishConnections();
+	mainWin.show();
+	splash->finish(&mainWin);
+	delete splash;
+	return app.exec();
+*/
 }
 //! [1]
 
