@@ -97,13 +97,11 @@ void Dialog::createMenu()
 //! [7]
 void Dialog::createHorizontalGroupBox()
 {
-    horizontalGroupBox = new QGroupBox(tr("Horizontal layout"));
+    horizontalGroupBox = new QGroupBox(tr("Device Found"));
     QHBoxLayout *layout = new QHBoxLayout;
 
-    for (int i = 0; i < NumButtons; ++i) {
-        buttons[i] = new QPushButton(tr("Button %1").arg(i + 1));
-	layout->addWidget(buttons[i]);
-    }
+    labels[0] = new QLabel(tr("WinTV HVR-950 BDA tuner"));
+    layout->addWidget(labels[0]);
     horizontalGroupBox->setLayout(layout);
 }
 //! [7]
@@ -111,12 +109,11 @@ void Dialog::createHorizontalGroupBox()
 //! [8]
 void Dialog::createGridGroupBox()
 {
-    gridGroupBox = new QGroupBox(tr("Grid layout"));
+    gridGroupBox = new QGroupBox(tr("Scan the program channel"));
 //! [8]
     QGridLayout *layout = new QGridLayout;
 
-//! [9]
-    for (int i = 0; i < NumGridRows; ++i) {
+/*    for (int i = 0; i < NumGridRows; ++i) {
 	labels[i] = new QLabel(tr("Line %1:").arg(i + 1));
 	lineEdits[i] = new QLineEdit;
 	layout->addWidget(labels[i], i + 1, 0);
@@ -129,11 +126,12 @@ void Dialog::createGridGroupBox()
                                  "grid layout."));
     layout->addWidget(smallEditor, 0, 2, 4, 1);
 //! [10]
-
+*/
 //! [11]
     layout->setColumnStretch(1, 10);
     layout->setColumnStretch(2, 20);
     gridGroupBox->setLayout(layout);
+
 }
 //! [11]
 
