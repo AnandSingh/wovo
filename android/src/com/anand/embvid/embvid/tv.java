@@ -3,6 +3,8 @@
 package com.anand.embvid.embvid;
 
 //import java.io.IOException;
+
+
 import android.app.Activity;
 import android.content.Context;
 //import android.app.AlertDialog;
@@ -51,7 +53,9 @@ OnPreparedListener, OnVideoSizeChangedListener, SurfaceHolder.Callback{
 			 "EUR", "ILS", "EUR", "LAK", "LVL", "LBP", "LSL ", "LRD", "LYD",
 			 "LTL ", "EUR"
 	 };
-    
+	TotalFreqList totalFreqList = new TotalFreqList();
+	Integer TotalCountry = totalFreqList.freqList.length;
+	
 	// Widgets in the application
     Button btnPlay;
     ImageButton btnPause;
@@ -131,12 +135,21 @@ OnPreparedListener, OnVideoSizeChangedListener, SurfaceHolder.Callback{
        	// By using setAdpater method in listview we an add string array in list.
         //lv1.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1 , lv_arr));
         lv1.setAdapter(new EfficientAdapter(this));
-
-        //filling country list
-        ArrayAdapter adapter = ArrayAdapter.createFromResource(
-                this, R.array.country, android.R.layout.simple_spinner_item);
+        Log.d(TAG, "totalFreqList.freqList.length " + totalFreqList.freqList.length);
+        String countryspn[]=new String[TotalCountry];
+        for(int i=0; i<TotalCountry; i++)
+        {
+        	countryspn[i] = totalFreqList.freqList[i].countryName;
+        }
+        ArrayAdapter adapter = new ArrayAdapter(this,
+        		android.R.layout.simple_spinner_item, countryspn);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spnCountry.setAdapter(adapter);
+           //filling country list
+        /*ArrayAdapter adapter = ArrayAdapter.createFromResource(
+                this, R.array.country, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spnCountry.setAdapter(adapter);*/
         // On app load, the Pause button is disabled
       // btnPause.setEnabled(false);
        m_tv = this;
