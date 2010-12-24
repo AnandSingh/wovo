@@ -75,7 +75,8 @@ static struct FREQ_LIST_T_TAG FRANCE[] = {
 static struct FREQ_LIST_T_TAG ITALY[] = {
     {177500,194500,7000},
     {203500,212500,7000},
-    {219500,226500,7000},
+    {:q
+    219500,226500,7000},
     {474000,858000,8000}
 };
 

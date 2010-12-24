@@ -136,13 +136,20 @@ OnPreparedListener, OnVideoSizeChangedListener, SurfaceHolder.Callback{
         //lv1.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1 , lv_arr));
         lv1.setAdapter(new EfficientAdapter(this));
         Log.d(TAG, "totalFreqList.freqList.length " + totalFreqList.freqList.length);
-        String countryspn[]=new String[TotalCountry];
+        String CountryArray[]=new String[TotalCountry];
+        String MaxFreqArray[];//=new String[TotalCountry];
+        String MinFreqArray[]=new String[TotalCountry];
         for(int i=0; i<TotalCountry; i++)
         {
-        	countryspn[i] = totalFreqList.freqList[i].countryName;
+        	CountryArray[i] = totalFreqList.freqList[i].countryName;
+        	MaxFreqArray = new String[TotalCountry];
+        	for(int j=0; j<totalFreqList.freqList[i].freqList.length; j++)
+        	{
+        		
+        	}
         }
         ArrayAdapter adapter = new ArrayAdapter(this,
-        		android.R.layout.simple_spinner_item, countryspn);
+        		android.R.layout.simple_spinner_item, CountryArray);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spnCountry.setAdapter(adapter);
            //filling country list
