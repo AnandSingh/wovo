@@ -180,8 +180,8 @@ public class Lists {
 	 if(line_count == 0)
 		  {
 			  seek_len = line_idx[TOTAL_LINES - 1];
-			  
-		  }
+			  line_count = TOTAL_LINES;
+     	  }
 		  else
 		  {
 			  seek_len = line_idx[line_count-1];
@@ -198,8 +198,18 @@ public class Lists {
  
  public String setLineCount(int val)
  {	 
-	 line_count = val;
-	 setFileSeek(line_count);
+	 if(val == 1)
+	 {
+		 line_count = 0;
+	 }else if(val == TOTAL_LINES)
+	 {
+		 line_count = TOTAL_LINES - 1;
+	 }
+	 else
+	 {
+		 line_count = val - 1; // since Next_list will do the increment
+	 }
+	 setFileSeek(val);
 	 return Next_list();
  }
  public boolean isLoaded()

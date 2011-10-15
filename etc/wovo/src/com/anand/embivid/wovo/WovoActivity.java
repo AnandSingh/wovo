@@ -51,21 +51,16 @@ public class WovoActivity extends Activity {
         tvDef = (TextView) findViewById(R.id.definition);
         tvDebug = (TextView) findViewById(R.id.num);
         
-       /* if(Lists.getInstance().Init_List() == 0)
-        {
-        	Log.d("wovo", "Init Success...");
-        }
-        else{
-        	Log.d("wovo", "Init Fail...");
-        }*/
-        
-        tvDebug.setText("Anand");
-        //set the default text
-        //get the last store count from prefrence
-        // intLastLine
-        intLastLine = 1;
+  
+        tvDebug.setText("");
+
+       
+        // wiat till it load or checks the data base
         while(Lists.getInstance().isLoaded() == false);
-        /*line = Lists.getInstance().setLineCount(intLastLine);
+        
+        // set the default text based on the last prefrence value
+        intLastLine = 4758;
+        line = Lists.getInstance().setLineCount(intLastLine);
         if(line != null)
         {
            Lists.getInstance().splitText(line);
@@ -77,7 +72,7 @@ public class WovoActivity extends Activity {
         	 tvWrd.setText("");
              tvDef.setText("Fail to Load database");
       	  Log.d("wovo", "Default Fail...");
-        }*/
+        }
         
        
        
@@ -106,6 +101,7 @@ public class WovoActivity extends Activity {
                {
         		   Lists.getInstance().splitText(line);
                    tvWrd.setText(Lists.getInstance().getWord());
+                   
                    tvDef.setText(Lists.getInstance().getDefine());
                    tvDebug.setText(Lists.getInstance().getLineCount());
                }else
