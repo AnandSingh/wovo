@@ -176,32 +176,30 @@ public class Lists {
  public int setFileSeek(int line_count)
  {
 	 int seek_len = 0;
-	  
-	  if(line_count != 0)
-	  {
-		  line_count--;
-		  if(line_count == 0)
+	 int ret = 0;
+	 if(line_count == 0)
 		  {
 			  seek_len = line_idx[TOTAL_LINES - 1];
-			  line_count = TOTAL_LINES;
+			  
 		  }
 		  else
 		  {
 			  seek_len = line_idx[line_count-1];
 		  }
-	  }
 	  try
 	  {
 		  raf.seek(seek_len + (line_count - 1));
+		  ret = 1;
 	  }
 	  catch (Exception e){Log.d("wovo next", e.toString());}
+	  return ret;
 	  
-	  return line_count;
- }
+}
  
  public String setLineCount(int val)
  {	 
-	 line_count = setFileSeek(val);
+	 line_count = val;
+	 setFileSeek(line_count);
 	 return Next_list();
  }
  public boolean isLoaded()
@@ -222,23 +220,14 @@ public class Lists {
 		  }
 	  if((line = raf.readLine()) != null)
 	  {
-		  //curr_len += line.length();
 		  line_count++;
 		  Log.d("wovo", line_count + ": " + line + " - " + line.length());
-		  //if((curr_len + line_count) == total_len)
 		  if(line_count == TOTAL_LINES)
 		  {
 			  Log.d("wovo",">>>>>>>>>");
-			 // raf.seek(0);
-			 // line_count = 0;
-			 // curr_len = 0;
 			  file_start_end = END_FILE;
 			  
 		  }
-	  }else
-	  {
-		  System.out.println("End of File");
-		  
 	  }
 	  } catch (Exception e) { Log.d("wovo next", e.toString());}
 	
@@ -255,17 +244,19 @@ public class Lists {
  {
 	 if(mLoaded)
 	 {
-		 line_count = setFileSeek(line_count);
+		
+		 setFileSeek(line_count - 1);
 		
 		  try 
 		  {
 			  if((line = raf.readLine()) != null)
 			  {
+				  line_count--;
+				  if(line_count == 0)
+				  {
+				   line_count = TOTAL_LINES;
+				  }
 				  Log.d("wovo", line_count + ": " + line + " - " + line.length() + " - " + curr_len);
-			  }
-			  else
-			  {
-				  System.out.println("End of File");
 			  }
 			  if(file_start_end == END_FILE)
 			  {

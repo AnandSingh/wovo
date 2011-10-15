@@ -65,7 +65,7 @@ public class WovoActivity extends Activity {
         // intLastLine
         intLastLine = 1;
         while(Lists.getInstance().isLoaded() == false);
-        line = Lists.getInstance().setLineCount(intLastLine);
+        /*line = Lists.getInstance().setLineCount(intLastLine);
         if(line != null)
         {
            Lists.getInstance().splitText(line);
@@ -77,7 +77,7 @@ public class WovoActivity extends Activity {
         	 tvWrd.setText("");
              tvDef.setText("Fail to Load database");
       	  Log.d("wovo", "Default Fail...");
-        }
+        }*/
         
        
        
