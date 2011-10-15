@@ -165,10 +165,10 @@ public class Lists {
     	}
         //return sInstance;
     }
- public String getLineCount()
+ public int getLineCount()
  {
 	 
-	 return String.valueOf(line_count);//line_count;
+	 return line_count;//line_count;
  }
  
  // Set the file seek to the line number 
@@ -178,14 +178,15 @@ public class Lists {
 	 int seek_len = 0;
 	 int ret = 0;
 	 if(line_count == 0)
-		  {
+     {
 			  seek_len = line_idx[TOTAL_LINES - 1];
 			  line_count = TOTAL_LINES;
-     	  }
-		  else
-		  {
+     }
+	 else
+	 {
 			  seek_len = line_idx[line_count-1];
-		  }
+			  Log.d("wovo", "----- " + line_count + ", " + seek_len );
+	  }
 	  try
 	  {
 		  raf.seek(seek_len + (line_count - 1));
@@ -204,12 +205,14 @@ public class Lists {
 	 }else if(val == TOTAL_LINES)
 	 {
 		 line_count = TOTAL_LINES - 1;
+		 Log.d("wovo", "----- " + line_count);
 	 }
 	 else
 	 {
 		 line_count = val - 1; // since Next_list will do the increment
 	 }
 	 setFileSeek(val);
+	 file_start_end = 0;
 	 return Next_list();
  }
  public boolean isLoaded()
@@ -227,6 +230,8 @@ public class Lists {
 			  line_count = 0;
 			  curr_len = 0;
 			  file_start_end = START_FILE;
+			  
+			  Log.d("wovo", "----- END"  );
 		  }
 	  if((line = raf.readLine()) != null)
 	  {

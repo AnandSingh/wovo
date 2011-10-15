@@ -6,8 +6,10 @@ package com.anand.embivid.wovo;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -16,7 +18,7 @@ import android.widget.TextView;
 
 public class WovoActivity extends Activity {
     
-
+	SharedPreferences app_pref = null;
 	private Button btnNxt;
 	private Button btnBck;
     private TextView tvWrd;
@@ -43,6 +45,8 @@ public class WovoActivity extends Activity {
             Log.d("wovo", intent.getExtras().keySet().toString());
         }
         
+        // Get the app's shared preferences
+        app_pref = PreferenceManager.getDefaultSharedPreferences(this);
         
         
         btnNxt = (Button) findViewById(R.id.button1);
@@ -53,20 +57,24 @@ public class WovoActivity extends Activity {
         
   
         tvDebug.setText("");
+        
+        //get the last time used line number 
+        intLastLine = app_pref.getInt("LastLine", 1);
 
-       
         // wiat till it load or checks the data base
         while(Lists.getInstance().isLoaded() == false);
         
+        Log.d("wovo", "LastWord line number : " + intLastLine );
+        
         // set the default text based on the last prefrence value
-        intLastLine = 4758;
         line = Lists.getInstance().setLineCount(intLastLine);
         if(line != null)
         {
            Lists.getInstance().splitText(line);
            tvWrd.setText(Lists.getInstance().getWord());
            tvDef.setText(Lists.getInstance().getDefine());
-           tvDebug.setText(Lists.getInstance().getLineCount());
+           int curr_line = Lists.getInstance().getLineCount();
+           tvDebug.setText(String.valueOf(curr_line));
         }else
         {
         	 tvWrd.setText("");
@@ -85,7 +93,13 @@ public class WovoActivity extends Activity {
                 	  Lists.getInstance().splitText(line);
                       tvWrd.setText(Lists.getInstance().getWord());
                       tvDef.setText(Lists.getInstance().getDefine());
-                      tvDebug.setText(Lists.getInstance().getLineCount());
+                      int curr_line = Lists.getInstance().getLineCount();
+                      tvDebug.setText(String.valueOf(curr_line));
+                      
+                      // Save the last line
+                      SharedPreferences.Editor editor = app_pref.edit();
+                      editor.putInt("LastLine", curr_line);
+                      editor.commit();
                   }else
                   {
                 	  Log.d("wovo", "Next Fail...");
@@ -103,7 +117,13 @@ public class WovoActivity extends Activity {
                    tvWrd.setText(Lists.getInstance().getWord());
                    
                    tvDef.setText(Lists.getInstance().getDefine());
-                   tvDebug.setText(Lists.getInstance().getLineCount());
+                   int curr_line = Lists.getInstance().getLineCount();
+                   tvDebug.setText(String.valueOf(curr_line));
+                   
+                // Save the last line
+                   SharedPreferences.Editor editor = app_pref.edit();
+                   editor.putInt("LastLine", curr_line);
+                   editor.commit();
                }else
                {
             	   Log.d("wovo", "Back Fail...");
