@@ -13,19 +13,28 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 public class WovoActivity extends Activity {
     
 	SharedPreferences app_pref = null;
+	private Button btnDft;
+	private Button btnLrn;
 	private Button btnNxt;
 	private Button btnBck;
+	
     private TextView tvWrd;
     private TextView tvDef;
     private TextView tvDebug;
     private int intLastLine = 0;
-    String line = null;
+    private String line = null;
+    
+    // use this variable to distinguish between the default
+    // or learned sccreen
+    private boolean Def0Learn1 = false;
 	/** Called when the activity is first created. */
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,7 +57,8 @@ public class WovoActivity extends Activity {
         // Get the app's shared preferences
         app_pref = PreferenceManager.getDefaultSharedPreferences(this);
         
-        
+        btnDft = (Button) findViewById(R.id.button_default);
+        btnLrn = (Button) findViewById(R.id.button_learned);
         btnNxt = (Button) findViewById(R.id.button1);
         btnBck = (Button) findViewById(R.id.button2);
         tvWrd = (TextView) findViewById(R.id.word);
@@ -82,11 +92,41 @@ public class WovoActivity extends Activity {
       	  Log.d("wovo", "Default Fail...");
         }
         
-       
-       
+
+        
+        btnDft.setOnClickListener(new View.OnClickListener() {
+               public void onClick(View view) {
+            	   // Get the ViewFlipper from the layout
+                   ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);
+                   
+                   Lists.getInstance().setView(false);
+                   // Set an animation from res/animation:
+                   vf.setAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.push_left_in));
+                   vf.showNext();
+                   
+               }
+        });
+        
+        
+        
+        btnLrn.setOnClickListener(new View.OnClickListener() {
+               public void onClick(View view) {
+            	   // Get the ViewFlipper from the layout
+                   ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);
+                   Lists.getInstance().setView(true);
+                   // Set an animation from res/animation: I pick push left in
+                   vf.setAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.push_left_in));
+                   vf.showNext();
+                   
+               }
+        });
+        
+        
        btnNxt.setOnClickListener(new View.OnClickListener() {
               public void onClick(View view) {
-                  String line = Lists.getInstance().Next_list();
+               
+            	  
+            	  String line = Lists.getInstance().Next_list();
                   
                   if(line != null)
                   {

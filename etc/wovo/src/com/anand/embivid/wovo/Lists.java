@@ -41,12 +41,10 @@ public class Lists {
         return sInstance;
     }
 
-   // private final Map<String, List<Word>> mDict = new ConcurrentHashMap<String, List<Word>>();
 
-    private Lists() {
-    }
-    
-   
+    // use this variable to distinguish between the default
+    // or learned sccreen
+    private boolean view = false;
     private boolean mLoaded = false;
     private RandomAccessFile raf = null;
     private long total_len = 0; 
@@ -137,6 +135,11 @@ public class Lists {
 	private String word = null;
 	private String define = null;
     
+	
+	public void setView(boolean mView) {
+		view = mView;
+    }
+	
  public int Init_List() {
     	
     	if(mLoaded)
@@ -426,31 +429,5 @@ public class Lists {
         }
     }
 
-
-   // public List<Word> getMatches(String query) {
-   //     List<Word> list = mDict.get(query);
-   //     return list == null ? Collections.EMPTY_LIST : list;
-   // }
-   /* Integer i = 0;
-    private void addWord(String word, String definition)
-    {
-        final Word theWord = new Word(word, definition);
-        i++;
-        Log.d("wovo", i.toString());
-        //final int len = word.length();
-        //for (int i = 0; i < len; i++) {
-        //    final String prefix = word.substring(0, len - i);
-        //    //addMatch(prefix, theWord);
-        //}
-    }*/
-
-    //private void addMatch(String query, Word word) {
-    //    List<Word> matches = mDict.get(query);
-    //    if (matches == null) {
-    //        matches = new ArrayList<Word>();
-    //        mDict.put(query, matches);
-    //    }
-    //    matches.add(word);
-    //}
 }
 
