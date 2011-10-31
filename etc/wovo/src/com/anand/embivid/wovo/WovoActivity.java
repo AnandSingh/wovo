@@ -5,6 +5,7 @@ package com.anand.embivid.wovo;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -16,11 +17,14 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 public class WovoActivity extends Activity {
     
 	SharedPreferences app_pref = null;
+	private Button btnMain;
+	private Button btnMem;
 	private Button btnDft;
 	private Button btnLrn;
 	private Button btnNxt;
@@ -29,12 +33,45 @@ public class WovoActivity extends Activity {
     private TextView tvWrd;
     private TextView tvDef;
     private TextView tvDebug;
+    
     private int intLastLine = 0;
     private String line = null;
     
-    // use this variable to distinguish between the default
-    // or learned sccreen
-    private boolean Def0Learn1 = false;
+    public boolean InitWovo(boolean View)
+    {
+    	//get the last time used line number 
+        if(true  == View)
+        {
+        	intLastLine = app_pref.getInt("user_Line", 0);
+        	Log.d("wovo", "user ......");
+        	
+        }else
+        {
+        	intLastLine = app_pref.getInt("def_Line", 1);
+        	Log.d("wovo", "default ......" + intLastLine);
+        }
+        Log.d("wovo", "LastWord line number : " + intLastLine );
+        
+        // set the default text based on the last prefrence value
+        line = Lists.getInstance().setLineCount(intLastLine);
+        
+        if(line != null)
+        {
+           Lists.getInstance().splitText(line);
+           tvWrd.setText(Lists.getInstance().getWord());
+           tvDef.setText(Lists.getInstance().getDefine());
+           int curr_line = Lists.getInstance().getLineCount();
+           tvDebug.setText(String.valueOf(curr_line));
+           return true;
+        }else
+        {
+        	 tvWrd.setText("");
+             tvDef.setText("Fail to Load database");
+             Log.d("wovo", "Default Fail...");
+    	     return false;
+        }
+    }
+    
 	/** Called when the activity is first created. */
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +94,8 @@ public class WovoActivity extends Activity {
         // Get the app's shared preferences
         app_pref = PreferenceManager.getDefaultSharedPreferences(this);
         
+        btnMem = (Button) findViewById(R.id.button_mem);
+        btnMain = (Button) findViewById(R.id.button_main);
         btnDft = (Button) findViewById(R.id.button_default);
         btnLrn = (Button) findViewById(R.id.button_learned);
         btnNxt = (Button) findViewById(R.id.button1);
@@ -67,42 +106,36 @@ public class WovoActivity extends Activity {
         
   
         tvDebug.setText("");
-        
-        //get the last time used line number 
-        intLastLine = app_pref.getInt("LastLine", 1);
 
+       
         // wiat till it load or checks the data base
         while(Lists.getInstance().isLoaded() == false);
         
-        Log.d("wovo", "LastWord line number : " + intLastLine );
-        
-        // set the default text based on the last prefrence value
-        line = Lists.getInstance().setLineCount(intLastLine);
-        if(line != null)
-        {
-           Lists.getInstance().splitText(line);
-           tvWrd.setText(Lists.getInstance().getWord());
-           tvDef.setText(Lists.getInstance().getDefine());
-           int curr_line = Lists.getInstance().getLineCount();
-           tvDebug.setText(String.valueOf(curr_line));
-        }else
-        {
-        	 tvWrd.setText("");
-             tvDef.setText("Fail to Load database");
-      	  Log.d("wovo", "Default Fail...");
-        }
+       
         
 
-        
+        // for default screen
         btnDft.setOnClickListener(new View.OnClickListener() {
                public void onClick(View view) {
             	   // Get the ViewFlipper from the layout
                    ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);
                    
                    Lists.getInstance().setView(false);
+                   if( true == InitWovo(false))
+                   {
                    // Set an animation from res/animation:
                    vf.setAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.push_left_in));
                    vf.showNext();
+                   }
+                   else
+                   {
+                	   Context context = getApplicationContext();
+                	   CharSequence text = "Fail to Load Database ...";
+                	   int duration = Toast.LENGTH_SHORT;
+
+                	   Toast toast = Toast.makeText(context, text, duration);
+                	   toast.show();
+                   }
                    
                }
         });
@@ -114,9 +147,20 @@ public class WovoActivity extends Activity {
             	   // Get the ViewFlipper from the layout
                    ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);
                    Lists.getInstance().setView(true);
-                   // Set an animation from res/animation: I pick push left in
-                   vf.setAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.push_left_in));
-                   vf.showNext();
+                   if(true == InitWovo(true))
+                   {
+                	   // Set an animation from res/animation: I pick push left in
+                	   vf.setAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.push_left_in));
+                	   vf.showNext();
+                   }else
+                   {
+                	   Context context = getApplicationContext();
+                	   CharSequence text = "No words for revision...";
+                	   int duration = Toast.LENGTH_SHORT;
+
+                	   Toast toast = Toast.makeText(context, text, duration);
+                	   toast.show();
+                   }
                    
                }
         });
@@ -124,8 +168,7 @@ public class WovoActivity extends Activity {
         
        btnNxt.setOnClickListener(new View.OnClickListener() {
               public void onClick(View view) {
-               
-            	  
+                           	  
             	  String line = Lists.getInstance().Next_list();
                   
                   if(line != null)
@@ -138,7 +181,7 @@ public class WovoActivity extends Activity {
                       
                       // Save the last line
                       SharedPreferences.Editor editor = app_pref.edit();
-                      editor.putInt("LastLine", curr_line);
+                      editor.putInt("def_Line", curr_line);
                       editor.commit();
                   }else
                   {
@@ -162,7 +205,7 @@ public class WovoActivity extends Activity {
                    
                 // Save the last line
                    SharedPreferences.Editor editor = app_pref.edit();
-                   editor.putInt("LastLine", curr_line);
+                   editor.putInt("def_Line", curr_line);
                    editor.commit();
                }else
                {
@@ -170,8 +213,39 @@ public class WovoActivity extends Activity {
                }
            }
        });
+       
+       btnMain.setOnClickListener(new View.OnClickListener() {
+           public void onClick(View view) {
+               ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);
+               // Set an animation from res/animation: I pick push left in
+        	   vf.setAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.fade));
+        	   vf.showPrevious();
+           }
+       });
+       
+       btnMem.setOnClickListener(new View.OnClickListener() {
+           public void onClick(View view) {
+        	   Context context = getApplicationContext();
+        	   CharSequence text = null;
+        	   if(true == Lists.getInstance().setLearnWord())
+        	   {
+        		   text =  Lists.getInstance().getWord() + " added to memorized word list.. ";
+	       	   }else
+        	   {
+	     		   text =  Lists.getInstance().getWord() + " is already added .. ";
+        	   }
+        	   int duration = Toast.LENGTH_SHORT;
+    		   Toast toast = Toast.makeText(context, text, duration);
+    		   toast.show();
+    		   
+        	   Lists.getInstance().printIdx();
+           }
+       });
+       
 
     }
+	
+	
 	
 	
 }
