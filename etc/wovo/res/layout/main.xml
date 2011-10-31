@@ -36,6 +36,12 @@
             android:textSize="18px"
             android:layout_height="55dp">
         </Button>
+        <Button android:text="Reset"
+            android:id="@+id/button_reset"
+            android:layout_width="wrap_content"
+            android:textSize="18px"
+            android:layout_height="55dp">
+        </Button>
         </LinearLayout> 
         
           <LinearLayout
@@ -69,18 +75,25 @@
             android:layout_marginLeft="23dip"
             android:layout_marginTop="5dip"
             android:gravity="center_vertical|center_horizontal"
-             android:layout_width="270dp"/>
+             android:layout_width="270dip"/>
             
     <TextView
             android:id="@+id/definition"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#000000"
-            android:layout_height="110px"
+            android:layout_height="110dip"
             android:text="@string/hello"
             android:layout_marginLeft="23dip"
-            android:layout_marginTop="30dip"  
+            android:layout_marginTop="7dip"  
             android:gravity="center_vertical|center_horizontal"
-            android:layout_width="270dp"/>
+            android:layout_width="270dip"/>
+        
+        <Button android:text="I have learned this word !"
+        android:layout_width="wrap_content"
+        android:id="@+id/button_mem" 
+        android:layout_height="40dip"
+        android:layout_marginLeft="23dip"
+        android:layout_marginTop="10dip"></Button>
     <LinearLayout android:id="@+id/linearLayout1"
      android:layout_width="match_parent" 
      android:layout_height="wrap_content" 
@@ -89,25 +102,19 @@
         <Button android:text="Back" 
         android:layout_width="wrap_content" 
         android:id="@+id/button2" 
-        android:layout_height="84dp"
+        android:layout_height="84dip"
         android:layout_marginLeft="40dip"
         android:layout_marginTop="10dip" android:layout_weight="0.34"></Button>
         <Button android:text="Next"
         android:layout_width="wrap_content"
         android:id="@+id/button1" 
         android:layout_weight="0.34" 
-        android:layout_height="84dp"
+        android:layout_height="84dip"
         android:layout_marginLeft="50dip"
         android:layout_marginTop="10dip"></Button>
     </LinearLayout>
     
-     <Button android:text="I have learned this word !"
-        android:layout_width="wrap_content"
-        android:id="@+id/button_mem" 
-        android:layout_weight="0.15" 
-        android:layout_height="40dp"
-        android:layout_marginLeft="0dip"
-        android:layout_marginTop="10dip"></Button>
+
    </LinearLayout> 
   </ViewFlipper>   
 </LinearLayout>

@@ -23,12 +23,14 @@ import android.widget.ViewFlipper;
 public class WovoActivity extends Activity {
     
 	SharedPreferences app_pref = null;
+	private Button btnRst;
 	private Button btnMain;
 	private Button btnMem;
 	private Button btnDft;
 	private Button btnLrn;
 	private Button btnNxt;
 	private Button btnBck;
+	private int Def0User1 = 0;
 	
     private TextView tvWrd;
     private TextView tvDef;
@@ -42,11 +44,26 @@ public class WovoActivity extends Activity {
     	//get the last time used line number 
         if(true  == View)
         {
-        	intLastLine = app_pref.getInt("user_Line", 0);
-        	Log.d("wovo", "user ......");
+        	Def0User1 = 1;
+        	intLastLine = app_pref.getInt("user_Line", -1);
+        	Log.d("wovo", "user ......" + intLastLine);
+        	// no previous saved length
+        	if(intLastLine == -1)
+        	{
+        		if(true == Lists.getInstance().isAnythingLrn())
+        		{
+        		   //check if user has saved any new word 
+        		   intLastLine = 1;
+        		}
+        		else
+        		{
+        			intLastLine = 0;
+        		}
+        	}
         	
         }else
         {
+        	Def0User1 = 0; 
         	intLastLine = app_pref.getInt("def_Line", 1);
         	Log.d("wovo", "default ......" + intLastLine);
         }
@@ -61,13 +78,16 @@ public class WovoActivity extends Activity {
            tvWrd.setText(Lists.getInstance().getWord());
            tvDef.setText(Lists.getInstance().getDefine());
            int curr_line = Lists.getInstance().getLineCount();
-           tvDebug.setText(String.valueOf(curr_line));
+           int total_line = Lists.getInstance().getTotalCount();
+           
+           tvDebug.setText(String.valueOf(curr_line) + "/" + String.valueOf(total_line));
+           //tvDebug.setText(String.valueOf(curr_line));
            return true;
         }else
         {
-        	 tvWrd.setText("");
-             tvDef.setText("Fail to Load database");
-             Log.d("wovo", "Default Fail...");
+        	 //tvWrd.setText("");
+             //tvDef.setText("Fail to Load database");
+             //Log.d("wovo", "Default Fail...");
     	     return false;
         }
     }
@@ -79,8 +99,6 @@ public class WovoActivity extends Activity {
         setContentView(R.layout.main);
         
         Intent intent = getIntent();
-        
-        
         
         // from click on search results
         Lists.getInstance().ensureLoaded(getResources());
@@ -94,6 +112,7 @@ public class WovoActivity extends Activity {
         // Get the app's shared preferences
         app_pref = PreferenceManager.getDefaultSharedPreferences(this);
         
+        btnRst = (Button) findViewById(R.id.button_reset);
         btnMem = (Button) findViewById(R.id.button_mem);
         btnMain = (Button) findViewById(R.id.button_main);
         btnDft = (Button) findViewById(R.id.button_default);
@@ -173,15 +192,25 @@ public class WovoActivity extends Activity {
                   
                   if(line != null)
                   {
+                	  int curr_line;
                 	  Lists.getInstance().splitText(line);
                       tvWrd.setText(Lists.getInstance().getWord());
                       tvDef.setText(Lists.getInstance().getDefine());
-                      int curr_line = Lists.getInstance().getLineCount();
-                      tvDebug.setText(String.valueOf(curr_line));
+                      curr_line = Lists.getInstance().getLineCount();
+                      int total_line = Lists.getInstance().getTotalCount();
+                                          
+                      tvDebug.setText(String.valueOf(curr_line) + "/" + String.valueOf(total_line));
                       
                       // Save the last line
                       SharedPreferences.Editor editor = app_pref.edit();
+                      if(Def0User1 == 0)
+                      {
                       editor.putInt("def_Line", curr_line);
+                      }
+                      else
+                      {
+                   	   editor.putInt("user_Line", curr_line);
+                      }
                       editor.commit();
                   }else
                   {
@@ -201,11 +230,21 @@ public class WovoActivity extends Activity {
                    
                    tvDef.setText(Lists.getInstance().getDefine());
                    int curr_line = Lists.getInstance().getLineCount();
-                   tvDebug.setText(String.valueOf(curr_line));
+                   int total_line = Lists.getInstance().getTotalCount();
+                   
+                   tvDebug.setText(String.valueOf(curr_line) + "/" + String.valueOf(total_line));
+                   
                    
                 // Save the last line
                    SharedPreferences.Editor editor = app_pref.edit();
-                   editor.putInt("def_Line", curr_line);
+                   if(Def0User1 == 0)
+                   {
+                    editor.putInt("def_Line", curr_line);
+                   }
+                   else
+                   {
+                	   editor.putInt("user_Line", curr_line);
+                   }
                    editor.commit();
                }else
                {
@@ -237,11 +276,25 @@ public class WovoActivity extends Activity {
         	   int duration = Toast.LENGTH_SHORT;
     		   Toast toast = Toast.makeText(context, text, duration);
     		   toast.show();
-    		   
-        	   Lists.getInstance().printIdx();
+               int curr_line = Lists.getInstance().getLineCount();
+               int total_line = Lists.getInstance().getTotalCount();
+               
+               tvDebug.setText(String.valueOf(curr_line) + "/" + String.valueOf(total_line));
+        	   //Lists.getInstance().printIdx();
            }
        });
        
+       btnRst.setOnClickListener(new View.OnClickListener() {
+           public void onClick(View view) {
+        	   SharedPreferences.Editor editor = app_pref.edit();
+               editor.putInt("def_Line", 1);
+               editor.putInt("user_Line", -1); 
+               editor.commit();
+        	   Lists.getInstance().reset();
+        	   Def0User1 = 0;
+           
+           }
+       });
 
     }
 	
