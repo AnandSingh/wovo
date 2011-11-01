@@ -80,7 +80,7 @@ public class WovoActivity extends Activity {
            int curr_line = Lists.getInstance().getLineCount();
            int total_line = Lists.getInstance().getTotalCount();
            
-           tvDebug.setText(String.valueOf(curr_line) + "/" + String.valueOf(total_line));
+           tvDebug.setText(String.valueOf(curr_line) + " / " + String.valueOf(total_line));
            //tvDebug.setText(String.valueOf(curr_line));
            return true;
         }else
@@ -174,7 +174,7 @@ public class WovoActivity extends Activity {
                    }else
                    {
                 	   Context context = getApplicationContext();
-                	   CharSequence text = "No words for revision...";
+                	   CharSequence text = " No words for revision ";
                 	   int duration = Toast.LENGTH_SHORT;
 
                 	   Toast toast = Toast.makeText(context, text, duration);
@@ -199,7 +199,7 @@ public class WovoActivity extends Activity {
                       curr_line = Lists.getInstance().getLineCount();
                       int total_line = Lists.getInstance().getTotalCount();
                                           
-                      tvDebug.setText(String.valueOf(curr_line) + "/" + String.valueOf(total_line));
+                      tvDebug.setText(String.valueOf(curr_line) + " / " + String.valueOf(total_line));
                       
                       // Save the last line
                       SharedPreferences.Editor editor = app_pref.edit();
@@ -232,7 +232,7 @@ public class WovoActivity extends Activity {
                    int curr_line = Lists.getInstance().getLineCount();
                    int total_line = Lists.getInstance().getTotalCount();
                    
-                   tvDebug.setText(String.valueOf(curr_line) + "/" + String.valueOf(total_line));
+                   tvDebug.setText(String.valueOf(curr_line) + " / " + String.valueOf(total_line));
                    
                    
                 // Save the last line
@@ -268,10 +268,10 @@ public class WovoActivity extends Activity {
         	   CharSequence text = null;
         	   if(true == Lists.getInstance().setLearnWord())
         	   {
-        		   text =  Lists.getInstance().getWord() + " added to memorized word list.. ";
+        		   text =  " \"" + Lists.getInstance().getWord() + "\" added to memorized word list ";
 	       	   }else
         	   {
-	     		   text =  Lists.getInstance().getWord() + " is already added .. ";
+	     		   text = " \"" + Lists.getInstance().getWord() + "\" is already added ";
         	   }
         	   int duration = Toast.LENGTH_SHORT;
     		   Toast toast = Toast.makeText(context, text, duration);
@@ -279,7 +279,7 @@ public class WovoActivity extends Activity {
                int curr_line = Lists.getInstance().getLineCount();
                int total_line = Lists.getInstance().getTotalCount();
                
-               tvDebug.setText(String.valueOf(curr_line) + "/" + String.valueOf(total_line));
+               tvDebug.setText(String.valueOf(curr_line) + " / " + String.valueOf(total_line));
         	   //Lists.getInstance().printIdx();
            }
        });
