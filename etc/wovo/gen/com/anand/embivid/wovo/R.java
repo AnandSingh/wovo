@@ -47,11 +47,14 @@ public final class R {
         public static final int button_learned=0x7f070003;
         public static final int button_main=0x7f070007;
         public static final int button_mem=0x7f07000b;
+        public static final int button_no=0x7f070011;
         public static final int button_reset=0x7f070004;
+        public static final int button_yes=0x7f070010;
         public static final int definition=0x7f07000a;
         public static final int details=0x7f070000;
         public static final int linearLayout1=0x7f07000c;
         public static final int num=0x7f070008;
+        public static final int rest_text2=0x7f07000f;
         public static final int tv_copyright=0x7f070006;
         public static final int tv_country=0x7f070001;
         public static final int tv_embvid=0x7f070005;
@@ -64,7 +67,9 @@ public final class R {
         public static final int list=0x7f050000;
     }
     public static final class string {
-        public static final int app_name=0x7f060001;
-        public static final int hello=0x7f060000;
+        public static final int activity_label=0x7f060003;
+        public static final int app_name=0x7f060002;
+        public static final int hello=0x7f060001;
+        public static final int reset_text=0x7f060000;
     }
 }

@@ -24,6 +24,8 @@ public class WovoActivity extends Activity {
 
 	SharedPreferences app_pref = null;
 	private Button btnRst;
+	private Button btnYes;
+	private Button btnNo;
 	private Button btnMain;
 	private Button btnMem;
 	private Button btnDft;
@@ -71,9 +73,22 @@ public class WovoActivity extends Activity {
 		}
 		Log.d("wovo", "LastWord line number : " + intLastLine );
 
+		if(Lists.getInstance().getTotalCount() == 0)
+		{
+			if(Def0User1 == 0)
+			{
+				
+			}
+			if(Def0User1 == 1)
+			{
+				
+			}
+			return false;
+		}
 		// set the default text based on the last prefrence value
 		line = Lists.getInstance().setLineCount(intLastLine);
 
+		
 		if(line != null)
 		{
 			Lists.getInstance().splitText(line);
@@ -101,6 +116,7 @@ public class WovoActivity extends Activity {
 		outState.putInt("view", Def0User1 );
 		outState.putInt("flip", flip);
 		super.onSaveInstanceState(outState); 
+		//Lists.getInstance().saveLrnWordList();
 	}
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState) 
@@ -116,11 +132,14 @@ public class WovoActivity extends Activity {
 			boolean view = false;
 			if(Def0User1 == 0)
 			{
+				btnMem.setText(" I have memorized this word ! ");
 				view = false;
 			}else
 			{
+				btnMem.setText(" I hadn't memorized this word ! ");
 				view = true;
 			}
+			
 			Lists.getInstance().setView(view);
 
 			if( true == InitWovo(view))
@@ -141,8 +160,27 @@ public class WovoActivity extends Activity {
 				toast.show();
 			}
 		}
+		if(flip == 3)
+		{
+			ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);
+			vf.showNext();
+			vf.showNext();
+		}
 	}
 
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.v("wovo", " +++ onPause +++");
+		Lists.getInstance().readWriteLrnWordList(1);
+		//Lists.getInstance().readWriteLrnWordList(0);
+	}
+	@Override
+	public void onResume() {
+		super.onResume();
+		Log.v("wovo", " +++ onResume +++");
+		Lists.getInstance().readWriteLrnWordList(0);
+	}
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -164,6 +202,8 @@ public class WovoActivity extends Activity {
 		app_pref = PreferenceManager.getDefaultSharedPreferences(this);
 
 		btnRst = (Button) findViewById(R.id.button_reset);
+		btnYes = (Button) findViewById(R.id.button_yes);
+		btnNo = (Button) findViewById(R.id.button_no);
 		btnMem = (Button) findViewById(R.id.button_mem);
 		btnMain = (Button) findViewById(R.id.button_main);
 		btnDft = (Button) findViewById(R.id.button_default);
@@ -188,8 +228,22 @@ public class WovoActivity extends Activity {
 		btnDft.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				// Get the ViewFlipper from the layout
+				if(Lists.getInstance().getTotalCount() == 0)
+				{
+					CharSequence text = " No words Found in Main List ";
+					int duration = Toast.LENGTH_SHORT;
+					Toast toast = Toast.makeText(view.getContext(), text, duration);
+					toast.show();
+					ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);
+					//flip = 1;
+					// Set an animation from res/animation: I pick push left in
+					//vf.setAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.fade));
+					//vf.showPrevious();
+					return;
+					
+				}
 				ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);
-
+				btnMem.setText(" I have memorized this word ! ");
 				Lists.getInstance().setView(false);
 				if( true == InitWovo(false))
 				{
@@ -217,8 +271,23 @@ public class WovoActivity extends Activity {
 		btnLrn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				// Get the ViewFlipper from the layout
+				if(Lists.getInstance().getTotalCount() == 0)
+				{
+					CharSequence text = " No words found in revision list ";
+					int duration = Toast.LENGTH_SHORT;
+					Toast toast = Toast.makeText(view.getContext(), text, duration);
+					toast.show();
+					ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);
+					//flip = 1;
+					// Set an animation from res/animation: I pick push left in
+					//vf.setAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.fade));
+					//vf.showPrevious();
+					return;
+					
+				}
 				ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);
 				Lists.getInstance().setView(true);
+				btnMem.setText(" I hadn't memorized this word ! ");
 				if(true == InitWovo(true))
 				{
 					flip = 2;
@@ -228,7 +297,7 @@ public class WovoActivity extends Activity {
 				}else
 				{
 					Context context = getApplicationContext();
-					CharSequence text = " No words for revision ";
+					CharSequence text = " No words found in revision list ";
 					int duration = Toast.LENGTH_SHORT;
 
 					Toast toast = Toast.makeText(context, text, duration);
@@ -320,26 +389,105 @@ public class WovoActivity extends Activity {
 		btnMem.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				Context context = getApplicationContext();
-				CharSequence text = null;
-				if(true == Lists.getInstance().setLearnWord())
+				if(Def0User1 == 0)
 				{
-					text =  " \"" + Lists.getInstance().getWord() + "\" added to memorized word list ";
-				}else
-				{
-					text = " \"" + Lists.getInstance().getWord() + "\" is already added ";
+					
+					CharSequence text = null;
+					if(true == Lists.getInstance().setLearnWord())
+					{
+						text =  " \"" + Lists.getInstance().getWord() + "\" added to memorized word list ";
+					}else
+					{
+						text = " \"" + Lists.getInstance().getWord() + "\" is already added ";
+					}
+					int duration = Toast.LENGTH_SHORT;
+					Toast toast = Toast.makeText(context, text, duration);
+					toast.show();
+					//updating the current line / total lines
+					//int curr_line = Lists.getInstance().getLineCount();
+					//int total_line = Lists.getInstance().getTotalCount();
+                   
+					//tvDebug.setText(String.valueOf(curr_line) + " / " + String.valueOf(total_line));
+					//this is for testing
+					//Lists.getInstance().saveLrnWordList();
 				}
-				int duration = Toast.LENGTH_SHORT;
-				Toast toast = Toast.makeText(context, text, duration);
-				toast.show();
-				int curr_line = Lists.getInstance().getLineCount();
-				int total_line = Lists.getInstance().getTotalCount();
+				if(Def0User1 == 1)
+				{
+					CharSequence text = null;
+					if(true == Lists.getInstance().removeLearnWord())
+					{
+						text =  " \"" + Lists.getInstance().getWord() + "\" removed from memorized word list ";
+					}
+					int duration = Toast.LENGTH_SHORT;
+					Toast toast = Toast.makeText(context, text, duration);
+					toast.show();
+					
+				}
+				if(Lists.getInstance().getTotalCount() == 0)
+				{
+					CharSequence text = " No words in memorized List ";
+					int duration = Toast.LENGTH_SHORT;
+					Toast toast = Toast.makeText(context, text, duration);
+					toast.show();
+					ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);
+					flip = 1;
+					// Set an animation from res/animation: I pick push left in
+					vf.setAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.fade));
+					vf.showPrevious();
+					return;
+					
+				}
+				
+				if(Lists.getInstance().getTotalCount() > 0)
+				{
+					// show the next avaiable word
+					String line = Lists.getInstance().Next_list();
 
-				tvDebug.setText(String.valueOf(curr_line) + " / " + String.valueOf(total_line));
+					if(line != null)
+					{
+						int curr_line;
+						Lists.getInstance().splitText(line);
+						tvWrd.setText(Lists.getInstance().getWord());
+						tvDef.setText(Lists.getInstance().getDefine());
+						curr_line = Lists.getInstance().getLineCount();
+						int total_line = Lists.getInstance().getTotalCount();
+
+						tvDebug.setText(String.valueOf(curr_line) + " / " + String.valueOf(total_line));
+
+						// Save the last line
+						SharedPreferences.Editor editor = app_pref.edit();
+						if(Def0User1 == 0)
+						{
+							editor.putInt("def_Line", curr_line);
+						}
+						else
+						{
+							editor.putInt("user_Line", curr_line);
+						}
+						editor.commit();
+					}else
+					{
+						Log.d("wovo", "Next Fail...");
+					}
+				}
+
 				//Lists.getInstance().printIdx();
 			}
 		});
 
 		btnRst.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);
+				flip = 3;
+				// Set an animation from res/animation: I pick push left in
+				//vf.setAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.fade));
+				vf.showNext();//showPrevious();
+				vf.showNext();
+				
+			}
+		});
+		
+		btnYes.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				SharedPreferences.Editor editor = app_pref.edit();
 				editor.putInt("def_Line", 1);
@@ -347,13 +495,26 @@ public class WovoActivity extends Activity {
 				editor.commit();
 				Lists.getInstance().reset();
 				Def0User1 = 0;
+				flip = 1;
+				ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);
+				//flip = 1;
+				// Set an animation from res/animation: I pick push left in
+				//vf.setAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.fade));
+				vf.showPrevious();
+				vf.showPrevious();
+			}
+		});
 
+		btnNo.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);
+				flip = 1;
+				// Set an animation from res/animation: I pick push left in
+				//vf.setAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.fade));
+				vf.showPrevious();
+				vf.showPrevious();
 			}
 		});
 
 	}
-
-
-
-
 }

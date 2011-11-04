@@ -24,30 +24,30 @@ import java.util.Map;
  * {@link android.R.styleable#View View Attributes}
  */
 public class WovoTextBox extends TextView {
-    public WovoTextBox(Context context) {
-        this(context, null);
-    }
+	public WovoTextBox(Context context) {
+		this(context, null);
+	}
 
-    public WovoTextBox(Context context, AttributeSet attrs) {
-        this(context, attrs, android.R.attr.textViewStyle);
-    }
+	public WovoTextBox(Context context, AttributeSet attrs) {
+		this(context, attrs, android.R.attr.textViewStyle);
+	}
 
-    public WovoTextBox(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-    }
+	public WovoTextBox(Context context, AttributeSet attrs, int defStyle) {
+		super(context, attrs, defStyle);
+	}
 
-    @Override
-    protected MovementMethod getDefaultMovementMethod() {
-        return ScrollingMovementMethod.getInstance();
-    }
+	@Override
+	protected MovementMethod getDefaultMovementMethod() {
+		return ScrollingMovementMethod.getInstance();
+	}
 
-    @Override
-    public Editable getText() {
-        return (Editable) super.getText();
-    }
+	@Override
+	public Editable getText() {
+		return (Editable) super.getText();
+	}
 
-    @Override
-    public void setText(CharSequence text, BufferType type) {
-        super.setText(text, BufferType.EDITABLE);
-    }
+	@Override
+	public void setText(CharSequence text, BufferType type) {
+		super.setText(text, BufferType.EDITABLE);
+	}
 }
