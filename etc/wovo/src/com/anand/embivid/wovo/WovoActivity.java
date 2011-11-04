@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -26,7 +27,7 @@ public class WovoActivity extends Activity {
 	private Button btnRst;
 	private Button btnYes;
 	private Button btnNo;
-	private Button btnMain;
+	//private Button btnMain;
 	private Button btnMem;
 	private Button btnDft;
 	private Button btnLrn;
@@ -109,6 +110,43 @@ public class WovoActivity extends Activity {
 		}
 	}
 
+	//@Override
+	//public boolean onKeyDown(int keyCode, KeyEvent event) {
+	//    if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+	//        Log.d(this.getClass().getName(), "back button pressed");
+	//        moveTaskToBack(true);
+	//    }
+	//    return super.onKeyDown(keyCode, event);
+	//}
+
+	@Override
+	public void onBackPressed() {
+	
+    Log.d(this.getClass().getName(), "back button pressed");
+	// do something on back.
+	ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);
+	if(flip == 1)
+	{
+		 super.onBackPressed();
+	}
+    if(flip == 2)
+    {
+    	
+    	flip = 1;
+		// Set an animation from res/animation: I pick push left in
+		vf.setAnimation(AnimationUtils.loadAnimation(this.getApplicationContext(), R.anim.fade));
+		vf.showPrevious();    	
+    }
+    if(flip == 3)
+    {
+    	flip = 1;
+    	vf.showPrevious();   
+    	vf.showPrevious();   
+    }
+   
+	return;
+	}
+	
 	@Override 
 	public void onSaveInstanceState(Bundle outState) 
 	{
@@ -205,7 +243,7 @@ public class WovoActivity extends Activity {
 		btnYes = (Button) findViewById(R.id.button_yes);
 		btnNo = (Button) findViewById(R.id.button_no);
 		btnMem = (Button) findViewById(R.id.button_mem);
-		btnMain = (Button) findViewById(R.id.button_main);
+	//	btnMain = (Button) findViewById(R.id.button_main);
 		btnDft = (Button) findViewById(R.id.button_default);
 		btnLrn = (Button) findViewById(R.id.button_learned);
 		btnNxt = (Button) findViewById(R.id.button1);
@@ -228,6 +266,7 @@ public class WovoActivity extends Activity {
 		btnDft.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				// Get the ViewFlipper from the layout
+				Lists.getInstance().setView(false);
 				if(Lists.getInstance().getTotalCount() == 0)
 				{
 					CharSequence text = " No words Found in Main List ";
@@ -244,7 +283,7 @@ public class WovoActivity extends Activity {
 				}
 				ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);
 				btnMem.setText(" I have memorized this word ! ");
-				Lists.getInstance().setView(false);
+				
 				if( true == InitWovo(false))
 				{
 					flip = 2;
@@ -271,6 +310,7 @@ public class WovoActivity extends Activity {
 		btnLrn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				// Get the ViewFlipper from the layout
+				Lists.getInstance().setView(true);
 				if(Lists.getInstance().getTotalCount() == 0)
 				{
 					CharSequence text = " No words found in revision list ";
@@ -286,7 +326,7 @@ public class WovoActivity extends Activity {
 					
 				}
 				ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);
-				Lists.getInstance().setView(true);
+				
 				btnMem.setText(" I hadn't memorized this word ! ");
 				if(true == InitWovo(true))
 				{
@@ -376,15 +416,15 @@ public class WovoActivity extends Activity {
 			}
 		});
 
-		btnMain.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View view) {
-				ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);
-				flip = 1;
-				// Set an animation from res/animation: I pick push left in
-				vf.setAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.fade));
-				vf.showPrevious();
-			}
-		});
+		//btnMain.setOnClickListener(new View.OnClickListener() {
+		//	public void onClick(View view) {
+		//		ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);
+		//		flip = 1;
+		//		// Set an animation from res/animation: I pick push left in
+		//		vf.setAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.fade));
+		//		vf.showPrevious();
+		//	}
+		//});
 
 		btnMem.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {

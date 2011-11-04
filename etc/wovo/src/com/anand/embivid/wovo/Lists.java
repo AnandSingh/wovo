@@ -535,7 +535,7 @@ public class Lists {
 					int k = 1;
 					while(k == 1)
 					{
-						int temp = line_count - 1;
+						int temp = line_count + 1;
 						Log.d("wovo", "Search line number :" + temp  );
 						flag = true;
 						for(int i =0; i<lrn_cnt; i++)
