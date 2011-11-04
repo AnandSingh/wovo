@@ -156,6 +156,7 @@ public class WovoActivity extends Activity {
 		super.onSaveInstanceState(outState); 
 		//Lists.getInstance().saveLrnWordList();
 	}
+	
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState) 
 	{
@@ -213,12 +214,14 @@ public class WovoActivity extends Activity {
 		Lists.getInstance().readWriteLrnWordList(1);
 		//Lists.getInstance().readWriteLrnWordList(0);
 	}
+	
 	@Override
 	public void onResume() {
 		super.onResume();
 		Log.v("wovo", " +++ onResume +++");
 		Lists.getInstance().readWriteLrnWordList(0);
 	}
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

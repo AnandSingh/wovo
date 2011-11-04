@@ -177,28 +177,8 @@ public class Lists {
     
 	public synchronized void readWriteLrnWordList(int read0write1)
 	{
-		//if(lrn_cnt > 0)
-		//{
-			  //adb Log.d("WOVO", "Writing File");
 		try {
-		
-			 
-			 //
-		     
-		     // Now write the data array to the file.
-		
-		       // Create an output stream to the file.
-		       //FileOutputStream file_output = new FileOutputStream (file);
-		       // Wrap the FileOutputStream with a DataOutputStream
-		       //DataOutputStream data_out = new DataOutputStream (file_output);
 
-		       // Write the data to the file in an integer/double pair
-		       //for (int i=0; i < lrn_cnt; i++) {
-		    	//   Log.d("wovo", " " + lrn_lines[i]);
-		        //   data_out.writeInt (lrn_lines[i]);
-              //}
-		       // Close file when finished with it..
-		      // file_output.close ();
 			if(read0write1 == 1)
 			{
 				 Log.d("WOVO", "===Writing File===");
@@ -215,21 +195,15 @@ public class Lists {
 					os.writeBytes("exit\n");
 					os.flush(); 
 				
-					//FileOutputStream file_output = 
 					// Wrap the FileOutputStream with a DataOutputStream
 					DataOutputStream data_out = new DataOutputStream (new FileOutputStream (lrn_file));
 
 					// Write the data to the file in an integer/double pair
-					//try{
+
 						for(int i = 0; i<lrn_cnt;i++)
 						{
 							data_out.writeInt (lrn_lines[i]);
 						}
-					//}catch(Exception e) 
-					//{
-						//Log.e("wovo", "setLearnWord() Exception");
-						//e.printStackTrace();
-					//}
 					data_out.close();
 				}
 			
@@ -242,7 +216,6 @@ public class Lists {
 				{
 					lrn_file = new File("/data/data/com.anand.embivid.wovo/lrn.dat");
 				}
-				//File file = new File("/data/data/com.anand.embivid.wovo/lrn.dat");
 				// Wrap the FileInputStream with a DataInputStream
 				//FileInputStream file_input = new FileInputStream (lrn_file);
 				DataInputStream data_in    = new DataInputStream (new FileInputStream (lrn_file) );
@@ -265,30 +238,26 @@ public class Lists {
 
 		} catch (Exception e) {
 			Log.e("wovo", "Exception");
-			//Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
 			return;
 		}
-}
+	}
 	
 	public boolean removeLearnWord()
 	{
-		boolean ret = false;
-		int[] temp_lines = new int[175];
 		int j = 0;
 		for(int i = 0; i< lrn_cnt; i++ )
 		{
 			int temp = lrn_lines[i];
 			if(i != curr_lrn_idx)
 			{
-				//Log.d("wovo", "" + j + "." + temp);
 				lrn_lines[j++] = temp;
 			}
 		}
-		lrn_cnt = j; 
-		//Log.d("wovo", "" + curr_lrn_idx);
+		lrn_cnt = j;
+		curr_lrn_idx--;
 		return true;
-		//lrn_cnt--;
 	}
+	
 	public boolean setLearnWord()
 	{
 		boolean ret = false;
@@ -303,20 +272,17 @@ public class Lists {
 		if(ret == false)
 		{
 			lrn_lines[lrn_cnt++] = line_count;
-			
 			return true;
 		}else
 		{
 			return false;
 		}
+		
 	}
 	
 	//public void printIdx()
 	//{
-	//	for(int i = 0; i<lrn_cnt; i++)
-	//	{
-	//		Log.d("wovo", " " + lrn_lines[i]);
-	//	}
+	//	
 	//}
 
 	public void setView(boolean mView) {
@@ -380,7 +346,20 @@ public class Lists {
 	{
 		if(view == false)
 		{
-			return line_count;
+			int j = 0;
+			for(int i = 0; i<lrn_cnt; i++)
+			{
+				
+				if(lrn_lines[i] < line_count)
+				{
+					j++;
+				}
+				else
+				{
+					break;
+				}
+			}
+			return (line_count - j);
 		}else
 		{
 			return (curr_lrn_idx + 1);
@@ -426,7 +405,7 @@ public class Lists {
 		else
 		{
 			seek_len = line_idx[line_count-1];
-			Log.d("wovo", "----- " + line_count + ", " + seek_len );
+			//Log.d("wovo", "----- " + line_count + ", " + seek_len );
 		}
 		try
 		{
@@ -475,7 +454,7 @@ public class Lists {
 			}else if(val >= TOTAL_LINES)
 			{
 				line_count = TOTAL_LINES - 1;
-				Log.d("wovo", "----- " + line_count);
+				//Log.d("wovo", "----- " + line_count);
 			}
 			else
 			{
@@ -500,7 +479,7 @@ public class Lists {
 			try {
 				if((line = raf.readLine()) != null)
 				{
-					Log.d("wovo", line_count + ": " + line + " - " + line.length() + " - " + curr_len);
+					//Log.d("wovo", line_count + ": " + line + " - " + line.length() + " - " + curr_len);
 				}
 			} catch (Exception e) { Log.d("wovo", e.toString());}
 			return line;
@@ -527,7 +506,7 @@ public class Lists {
 					}
 					if((line = GetLine(lrn_lines[curr_lrn_idx])) != null)
 					{
-						Log.d("wovo", curr_lrn_idx + " - " + lrn_cnt);
+						//Log.d("wovo", curr_lrn_idx + " - " + lrn_cnt);
 					}
 				}else
 				{
@@ -536,24 +515,24 @@ public class Lists {
 					while(k == 1)
 					{
 						int temp = line_count + 1;
-						Log.d("wovo", "Search line number :" + temp  );
+						//Log.d("wovo", "Search line number :" + temp  );
 						flag = true;
 						for(int i =0; i<lrn_cnt; i++)
 						{
-							 Log.d("wovo", "" + i + ". " + lrn_lines[i]);
+							 //Log.d("wovo", "" + i + ". " + lrn_lines[i]);
 							if(lrn_lines[i] == temp)
 							{
 								flag = false;
 								line_count++;
 								raf.readLine();
-					            Log.d("wovo", "In the memorized list :" + temp);
+					            //Log.d("wovo", "In the memorized list :" + temp);
 								break;
 							}
 						}
 						if(flag == true)
 						{
 							k = 0;
-							 Log.d("wovo", "Not in the memorized list :" + line_count);
+							//Log.d("wovo", "Not in the memorized list :" + line_count);
 							break;
 						}
 					}
@@ -570,10 +549,10 @@ public class Lists {
 					if((line = raf.readLine()) != null)
 					{
 						line_count++;
-						Log.d("wovo", line_count + ": " + line + " - " + line.length());
+						//Log.d("wovo", line_count + ": " + line + " - " + line.length());
 						if(line_count == TOTAL_LINES)
 						{
-							Log.d("wovo",">>>>>>>>>");
+							//Log.d("wovo",">>>>>>>>>");
 							file_start_end = END_FILE;
 
 						}
@@ -605,7 +584,7 @@ public class Lists {
 				}
 				if((line = GetLine(lrn_lines[curr_lrn_idx])) != null)
 				{
-					Log.d("wovo", curr_lrn_idx + " - " + lrn_cnt);
+					//Log.d("wovo", curr_lrn_idx + " - " + lrn_cnt);
 				}
 			}else
 			{
@@ -614,23 +593,23 @@ public class Lists {
 				while(k == 1)
 				{
 					int temp = line_count - 1;
-					Log.d("wovo", "Search line number :" + temp  );
+					//Log.d("wovo", "Search line number :" + temp  );
 					flag = true;
 					for(int i =0; i<lrn_cnt; i++)
 					{
-						 Log.d("wovo", "" + i + ". " + lrn_lines[i]);
+						 //Log.d("wovo", "" + i + ". " + lrn_lines[i]);
 						if(lrn_lines[i] == temp)
 						{
 							flag = false;
 							line_count--;
-				            Log.d("wovo", "In the memorized list :" + temp);
+				            //Log.d("wovo", "In the memorized list :" + temp);
 							break;
 						}
 					}
 					if(flag == true)
 					{
 						k = 0;
-						 Log.d("wovo", "Not in the memorized list :" + line_count);
+						//Log.d("wovo", "Not in the memorized list :" + line_count);
 						break;
 					}
 				}
@@ -644,7 +623,7 @@ public class Lists {
 						{
 							line_count = TOTAL_LINES;
 						}
-						Log.d("wovo", line_count + ": " + line + " - " + line.length() + " - " + curr_len);
+						//Log.d("wovo", line_count + ": " + line + " - " + line.length() + " - " + curr_len);
 					}
 					if(file_start_end == END_FILE)
 					{
@@ -652,7 +631,7 @@ public class Lists {
 					}
 					if(line_count == TOTAL_LINES)
 					{
-						Log.d("wovo", "<<<<<<<");
+						//Log.d("wovo", "<<<<<<<");
 						file_start_end = END_FILE;
 					}
 
