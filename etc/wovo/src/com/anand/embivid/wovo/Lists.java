@@ -163,16 +163,11 @@ public class Lists {
 		word = null;
 		define = null;
 		view = false; //false is default
-		//private boolean mLoaded = false;
-		//private RandomAccessFile raf = null;
 		total_len = 0; 
 		file_start_end = 0;
 		END_FILE = 2;
 		START_FILE = 1;
-		//data_out.close();
 		lrn_file.delete();
-		  Log.d("WOVO", "reset");
-		//TOTAL_LINES = 4759;
 	}
     
 	public synchronized void readWriteLrnWordList(int read0write1)
@@ -181,8 +176,6 @@ public class Lists {
 
 			if(read0write1 == 1)
 			{
-				 Log.d("WOVO", "===Writing File===");
-				// = new File("/data/data/com.anand.embivid.wovo/lrn.dat");
 				if(lrn_file.exists() == false)
 				{
 				  lrn_file = new File("/data/data/com.anand.embivid.wovo/lrn.dat");
@@ -280,11 +273,6 @@ public class Lists {
 		
 	}
 	
-	//public void printIdx()
-	//{
-	//	
-	//}
-
 	public void setView(boolean mView) {
 		view = mView;
 	}
@@ -323,10 +311,6 @@ public class Lists {
 					// Wrap the FileOutputStream with a DataOutputStream
 					Log.d("wovo", "\"lrn.dat\" File Loaded, Size :" + lrn_file.length());
 					Log.d("wovo", "\"lrn.dat\" loading saved words into memory");
-					
-					//saveLrnWordList();
-					//data_out = new DataOutputStream (new FileOutputStream (lrn_file));
-					
 				}
 			}
 			catch (Exception e)
@@ -339,7 +323,6 @@ public class Lists {
 		{
 			return 1;
 		}
-		//return sInstance;
 	}
 
 	public int getLineCount()
@@ -378,6 +361,7 @@ public class Lists {
 			return lrn_cnt;
 		}
 	}
+
 	public boolean isAnythingLrn()
 	{
 		if(lrn_cnt > 0)
@@ -405,7 +389,6 @@ public class Lists {
 		else
 		{
 			seek_len = line_idx[line_count-1];
-			//Log.d("wovo", "----- " + line_count + ", " + seek_len );
 		}
 		try
 		{
@@ -454,7 +437,6 @@ public class Lists {
 			}else if(val >= TOTAL_LINES)
 			{
 				line_count = TOTAL_LINES - 1;
-				//Log.d("wovo", "----- " + line_count);
 			}
 			else
 			{
@@ -552,9 +534,7 @@ public class Lists {
 						//Log.d("wovo", line_count + ": " + line + " - " + line.length());
 						if(line_count == TOTAL_LINES)
 						{
-							//Log.d("wovo",">>>>>>>>>");
 							file_start_end = END_FILE;
-
 						}
 					}
 				}

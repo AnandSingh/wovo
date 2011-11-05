@@ -4,6 +4,7 @@ package com.anand.embivid.wovo;
 
 
 
+import com.google.ads.*;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
@@ -42,6 +44,9 @@ public class WovoActivity extends Activity {
 
 	private int intLastLine = 0;
 	private String line = null;
+	private AdView adView;
+	
+
 
 
 	public boolean InitWovo(boolean View)
@@ -222,6 +227,13 @@ public class WovoActivity extends Activity {
 		Lists.getInstance().readWriteLrnWordList(0);
 	}
 	
+	 @Override
+	 public void onDestroy() {
+	    adView.destroy();
+	    super.onDestroy();
+	  }
+
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -263,9 +275,18 @@ public class WovoActivity extends Activity {
 		while(Lists.getInstance().isLoaded() == false);
 
 
+        ///for creating ads
+	    // Create the adView
+	    adView = new AdView(this, AdSize.BANNER, "a14eb39eac9a049");
 
+	    // Lookup your LinearLayout assuming it’s been given
+	    // the attribute android:id="@+id/mainLayout"
+	    LinearLayout layout = (LinearLayout)findViewById(R.id.linearLayout1);
 
-		// for default screen
+	    // Add the adView to it
+	    layout.addView(adView);
+
+	    // for default screen
 		btnDft.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				// Get the ViewFlipper from the layout
@@ -337,6 +358,8 @@ public class WovoActivity extends Activity {
 					// Set an animation from res/animation: I pick push left in
 					vf.setAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.push_left_in));
 					vf.showNext();
+					  // Initiate a generic request to load it with an ad
+				    //adView.loadAd(new AdRequest());
 				}else
 				{
 					Context context = getApplicationContext();
