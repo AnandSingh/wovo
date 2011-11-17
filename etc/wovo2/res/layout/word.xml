@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:padding="5dp"
+        android:background="#ffffff"
+        android:gravity="center_horizontal|center_vertical" android:weightSum="1"
+        >
+    <TextView
+            android:id="@+id/word"
+            android:textSize="35dp"
+            android:layout_width="250dip"
+            android:layout_height="wrap_content" 
+            android:textColor="#000000"
+            android:gravity="center_vertical|center_horizontal"/>
+    <TextView
+            android:id="@+id/definition"
+            android:textSize="18dp"
+            android:paddingTop="10dp"
+            android:layout_width="250dip"
+            android:layout_height="130dip" 
+            android:textColor="#000000"
+            android:gravity="center_vertical|center_horizontal"/>
+
+    
+    <Button android:text="  I have learned this word !  "
+				android:layout_width="wrap_content" android:id="@+id/button_mem"
+				android:layout_height="50dip" android:textSize="20dip"
+				android:layout_marginTop="8dip" 
+				></Button>
+
+			<LinearLayout android:id="@+id/linearLayout1"
+				android:layout_width="match_parent" android:layout_height="wrap_content"
+				android:weightSum="1" android:layout_marginTop="2dip"
+				android:gravity="center_horizontal|center_vertical">
+				<Button android:text="Back" android:layout_width="wrap_content"
+					android:id="@+id/button2" android:layout_height="78dip"
+					android:textSize="20dip" android:layout_marginTop="5dip"
+					></Button>
+				<Button android:text="Next" android:layout_width="wrap_content"
+					android:id="@+id/button1" android:textSize="20dip"
+					android:layout_height="78dip"
+					android:layout_marginTop="5dip"></Button>
+			</LinearLayout>
+</LinearLayout>
