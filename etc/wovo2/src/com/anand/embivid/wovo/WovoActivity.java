@@ -49,68 +49,7 @@ public class WovoActivity extends Activity {
 	
 
 
-	public boolean InitWovo(boolean View)
-	{
-		//get the last time used line number 
-		if(true  == View)
-		{
-			Def0User1 = 1;
-			intLastLine = app_pref.getInt("user_Line", -1);
-			//Log.d("wovo", "user ......" + intLastLine);
-			// no previous saved length
-			if(intLastLine == -1)
-			{
-				if(true == Lists.getInstance().isAnythingLrn())
-				{
-					//check if user has saved any new word 
-					intLastLine = 1;
-				}
-				else
-				{
-					intLastLine = 0;
-				}
-			}
-
-		}else
-		{
-			Def0User1 = 0; 
-			intLastLine = app_pref.getInt("def_Line", 1);
-			//Log.d("wovo", "default ......" + intLastLine);
-		}
-		//Log.d("wovo", "LastWord line number : " + intLastLine );
-
-		if(Lists.getInstance().getTotalCount() == 0)
-		{
-			if(Def0User1 == 0)
-			{
-				
-			}
-			if(Def0User1 == 1)
-			{
-				
-			}
-			return false;
-		}
-		// set the default text based on the last prefrence value
-		line = Lists.getInstance().setLineCount(intLastLine);
-
-		
-		if(line != null)
-		{
-			Lists.getInstance().splitText(line);
-			tvWrd.setText(Lists.getInstance().getWord());
-			tvDef.setText(Lists.getInstance().getDefine());
-			int curr_line = Lists.getInstance().getLineCount();
-			int total_line = Lists.getInstance().getTotalCount();
-
-			tvDebug.setText(String.valueOf(curr_line) + " / " + String.valueOf(total_line));
-			//tvDebug.setText(String.valueOf(curr_line));
-			return true;
-		}else
-		{
-			return false;
-		}
-	}
+	
 
 	@Override
 	public void onBackPressed() {
@@ -174,9 +113,9 @@ public class WovoActivity extends Activity {
 				view = true;
 			}
 			
-			Lists.getInstance().setView(view);
+			//Lists.getInstance().setView(view);
 
-			if( true == InitWovo(view))
+			//if( true == InitWovo(view))
 			{
 				flip = 2;
 				// Set an animation from res/animation:
@@ -184,7 +123,7 @@ public class WovoActivity extends Activity {
 				vf.showNext();
 
 			}
-			else
+			//else
 			{
 				Context context = getApplicationContext();
 				CharSequence text = " Fail to Load Database ";
@@ -206,7 +145,7 @@ public class WovoActivity extends Activity {
 	public void onPause() {
 		super.onPause();
 		//Log.v("wovo", " +++ onPause +++");
-		Lists.getInstance().readWriteLrnWordList(1);
+//		Lists.getInstance().readWriteLrnWordList(1);
 		//Lists.getInstance().readWriteLrnWordList(0);
 	}
 	
@@ -214,7 +153,7 @@ public class WovoActivity extends Activity {
 	public void onResume() {
 		super.onResume();
 		//Log.v("wovo", " +++ onResume +++");
-		Lists.getInstance().readWriteLrnWordList(0);
+	//	Lists.getInstance().readWriteLrnWordList(0);
 	}
 	
 	 @Override
@@ -225,14 +164,45 @@ public class WovoActivity extends Activity {
 
    public void LoadSearchAcitvity(boolean view)
    {
+	   CharSequence text = null;
 	   Log.e(TAG, "LoadSearchAcitvity ++");
-	   Intent searchIntent = new Intent(WovoActivity.this, MainSearchWordActivity.class);
-	   searchIntent.setData(getIntent().getData());
-	   searchIntent.putExtra("VIEW", view);
-	   //searchIntent.setAction(Intent.ACTION_VIEW);
-	   //searchIntent.putExtra("some_other_key", "a value");
-	   WovoActivity.this.startActivity(searchIntent);
-	   //finish();
+	   boolean flag = false;
+	   Log.e(TAG, "+++++++++++++++++++++++++");
+	   Log.e(TAG, "def: " + app_pref.getInt("DEF_LINE_CNT", 0));
+	   Log.e(TAG, "usr: " + app_pref.getInt("USR_LINE_CNT", 0));
+	   Log.e(TAG, "+++++++++++++++++++++++++");
+	   
+       if(view == false)
+       {
+ 	       if(app_pref.getInt("DEF_LINE_CNT", 0) == 0)
+	       {
+	    	   text = " No words found in main list ";
+	       }
+       }else if(view == true)
+       {
+    	   if(app_pref.getInt("USR_LINE_CNT", 0) == 0)
+    	   {
+    		   text = " No words found in revision list ";
+    		   flag = true;
+    	   }
+       }
+       
+       if(flag == false)
+       {
+    	   SharedPreferences.Editor editor = app_pref.edit();
+    	   editor.putBoolean("SCREEN_VIEW", view);
+    	   editor.commit();
+    	   Intent searchIntent = new Intent(WovoActivity.this, MainSearchWordActivity.class);
+    	   searchIntent.setData(getIntent().getData());
+    	   searchIntent.putExtra("VIEW", view);
+    	   WovoActivity.this.startActivity(searchIntent);
+    	   //finish();
+       }else if (flag == true)
+       {
+    	   Toast toast = Toast.makeText(this, text, Toast.LENGTH_SHORT);
+		   toast.show();
+       }
+
    }
    
 	/** Called when the activity is first created. */
@@ -297,100 +267,15 @@ public class WovoActivity extends Activity {
 		btnDft.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				// Get the ViewFlipper from the layout
-			
-				WovoActivity.this.LoadSearchAcitvity(false);
-				
-
-			        
-			/*	Lists.getInstance().setView(false);
-				if(Lists.getInstance().getTotalCount() == 0)
-				{
-					CharSequence text = " No words Found in Main List ";
-					int duration = Toast.LENGTH_SHORT;
-					Toast toast = Toast.makeText(view.getContext(), text, duration);
-					toast.show();
-					//ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);
-					//flip = 1;
-					// Set an animation from res/animation: I pick push left in
-					//vf.setAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.fade));
-					//vf.showPrevious();
-					return;
-					
-				}
-				ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);
-				btnMem.setText(" I have memorized this word ! ");
-				
-				if( true == InitWovo(false))
-				{
-					flip = 2;
-					// Set an animation from res/animation:
-					vf.setAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.push_left_in));
-					vf.showNext();
-				}
-				else
-				{
-					Context context = getApplicationContext();
-					CharSequence text = " Fail to Load Database ";
-					int duration = Toast.LENGTH_SHORT;
-
-					Toast toast = Toast.makeText(context, text, duration);
-					toast.show();
-				}*/
-
+				LoadSearchAcitvity(false);
 			}
 		});
 
-		
-		  
 		btnLrn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
-				// Get the ViewFlipper from the layout
-				// handles a click on a search suggestion; launches activity to show word
-				//setIntent(getIntent());
-				
 				LoadSearchAcitvity(true);
 				
-
-				
-				//Lists.getInstance().setView(true);
-				/*
-				if(Lists.getInstance().getTotalCount() == 0)
-				{
-					CharSequence text = " No words found in revision list ";
-					int duration = Toast.LENGTH_SHORT;
-					Toast toast = Toast.makeText(view.getContext(), text, duration);
-					toast.show();
-					//ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);
-					//flip = 1;
-					// Set an animation from res/animation: I pick push left in
-					//vf.setAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.fade));
-					//vf.showPrevious();
-					return;
-					
-				}
-				ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);
-				
-				btnMem.setText(" I hadn't memorized this word ! ");
-				if(true == InitWovo(true))
-				{
-					flip = 2;
-					// Set an animation from res/animation: I pick push left in
-					vf.setAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.push_left_in));
-					vf.showNext();
-					  // Initiate a generic request to load it with an ad
-				    //adView.loadAd(new AdRequest());
-				}else
-				{
-					Context context = getApplicationContext();
-					CharSequence text = " No words found in revision list ";
-					int duration = Toast.LENGTH_SHORT;
-
-					Toast toast = Toast.makeText(context, text, duration);
-					toast.show();
-				}
-*/
 			}
-			
 		});
 
 
@@ -414,7 +299,7 @@ public class WovoActivity extends Activity {
 				editor.putInt("def_Line", 1);
 				editor.putInt("user_Line", -1); 
 				editor.commit();
-				Lists.getInstance().reset();
+				//Lists.getInstance().reset();
 				Def0User1 = 0;
 				flip = 1;
 				ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);

@@ -4,11 +4,14 @@ import android.app.SearchManager;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.SharedPreferences;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 import android.util.Log;
+
 
 /**
  * Provides access to the dictionary database.
@@ -16,6 +19,9 @@ import android.util.Log;
 public class WordDefinationProvider extends ContentProvider {
     
 	static String TAG = "WordDefinationProvider";
+	private static final String IDENTITY_1 = "1";
+	private static final String IDENTITY_2 = "2";
+	//private boolean screen_view = false;
 
     public static String AUTHORITY = "com.anand.embivid.wovo.WordDefinationProvider";
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/wovodb");
@@ -65,7 +71,9 @@ public class WordDefinationProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
     	Log.e(TAG, " +++ onCreate +++");
-        mDictionary = new WordDatabase(getContext());
+    	
+    	mDictionary = new WordDatabase(getContext());
+    	
         return true;
     }
 
@@ -86,28 +94,54 @@ public class WordDefinationProvider extends ContentProvider {
         switch (sURIMatcher.match(uri)) {
             
            case SEARCH_SUGGEST:
-                if (selectionArgs == null) {
+        	   if (selectionArgs == null) {
                   throw new IllegalArgumentException(
                       "selectionArgs must be provided for the Uri: " + uri);
-                }
-                return getSuggestions(selectionArgs[0]);
+               }
+        	   String[] selargs = new String[] {selectionArgs[0], null};
+               //Log.e(TAG, "selectionArgs: " + selectionArgs); 
+              
+               //Log.e(TAG, "1." + selectionArgs[0]);
+               //Log.e(TAG, "2." + selectionArgs[1]);
+               
+               //String [] selargs =  new String[] {selectionArgs[0], null};;
+               SharedPreferences app_pref = PreferenceManager.getDefaultSharedPreferences(getContext());
+               boolean screen_view = app_pref.getBoolean("SCREEN_VIEW", false);
+               
+               if(screen_view == false)
+               {
+            	   selargs[1] = IDENTITY_1;
+               }else
+               {
+            	   selargs[1] = IDENTITY_2;
+               }
+               Log.e(TAG, "1." + selargs[0]);
+               Log.e(TAG, "2." + selargs[1]);
+                
+                return getSuggestions(selargs);
             case SEARCH_WORDS:
                	if (selectionArgs == null) {
                   throw new IllegalArgumentException(
                       "selectionArgs must be provided for the Uri: " + uri);
                 }
-                 return search(selectionArgs[0]);
+               	Log.e(TAG, "1." + selectionArgs[0]);
+               	Log.e(TAG, "2." + selectionArgs[1]);
+                 return search(selectionArgs);
             case GET_WORD:
-                return getWord(uri);
+                return getWord(uri, selectionArgs);
             case REFRESH_SHORTCUT:
-                return refreshShortcut(uri);
+                return refreshShortcut(uri, selectionArgs);
             default:
                 throw new IllegalArgumentException("Unknown Uri: " + uri);
         }
     }
 
-    private Cursor getSuggestions(String query) {
-      query = query.toLowerCase();
+    private Cursor getSuggestions(String[] query) {
+    
+      Log.e(TAG, "+++ getSuggestions +++");
+      query[0] = query[0].toLowerCase();
+      Log.e(TAG, "" + query[0]);
+      Log.e(TAG, "" + query[1]);
       String[] columns = new String[] {
           BaseColumns._ID,
           WordDatabase.KEY_WORD,
@@ -120,8 +154,11 @@ public class WordDefinationProvider extends ContentProvider {
       return mDictionary.getWordMatches(query, columns);
     }
 
-    private Cursor search(String query) {
-      query = query.toLowerCase();
+    private Cursor search(String[] query)
+    {
+      Log.e(TAG, "+++ search +++");
+      query[0] = query[0].toLowerCase();
+     
       String[] columns = new String[] {
           BaseColumns._ID,
           WordDatabase.KEY_WORD,
@@ -131,33 +168,38 @@ public class WordDefinationProvider extends ContentProvider {
       return mDictionary.getWordMatches(query, columns);
     }
 
-    private Cursor getLine(Uri uri, String rowId) {
-      Log.e(TAG, "geLine ++ ");
-      Log.e(TAG, "uri: " + uri);
-      //String rowId = uri.getLastPathSegment();
-      Log.e(TAG, "rowId : " + rowId);
-      String[] columns = new String[] {
-          WordDatabase.KEY_WORD,
-          WordDatabase.KEY_DEFINITION,
-          WordDatabase.KEY_IDENTITY};
-      currentRowId = Integer.valueOf(rowId);
-      return mDictionary.getWord(rowId, columns);
-    }
-    
-    private Cursor getWord(Uri uri) {
+    private Cursor getWord(Uri uri, String[] selectionArgs)
+    {
     	Log.e(TAG, "getWord ++ ");
      	Log.e(TAG, "uri: " + uri);
       String rowId = uri.getLastPathSegment();
       Log.e(TAG, "rowId : " + rowId);
+     
       String[] columns = new String[] {
           WordDatabase.KEY_WORD,
           WordDatabase.KEY_DEFINITION,
           WordDatabase.KEY_IDENTITY};
       currentRowId = Integer.valueOf(rowId);
-      return mDictionary.getWord(rowId, columns);
+    
+      //String[] query = new String[] {rowId, null};
+      //SharedPreferences app_pref = PreferenceManager.getDefaultSharedPreferences(getContext());
+  	  //screen_view = app_pref.getBoolean("SCREEN_VIEW", false);
+      //if(screen_view == false)
+      //{
+      //	  query[1] = IDENTITY_1;
+      //}else
+      //{
+      //	  query[1] = IDENTITY_2;
+      //}
+      Log.e(TAG, "selectionArgs[0] :" + selectionArgs[0]);
+      Log.e(TAG, "selectionArgs[1] :" + selectionArgs[1]);
+      		
+     
+     return mDictionary.getWord(selectionArgs, columns);
     }
 
-    private Cursor refreshShortcut(Uri uri) {
+    private Cursor refreshShortcut(Uri uri, String[] selectionArgs)
+    {
       /* This won't be called with the current implementation, but if we include
        * {@link SearchManager#SUGGEST_COLUMN_SHORTCUT_ID} as a column in our suggestions table, we
        * could expect to receive refresh queries when a shortcutted suggestion is displayed in
@@ -165,6 +207,7 @@ public class WordDefinationProvider extends ContentProvider {
        * word, using the given item Uri and provide all the columns originally provided with the
        * suggestion query.
        */
+      Log.e(TAG, "refreshShortcut +++");
       String rowId = uri.getLastPathSegment();
       String[] columns = new String[] {
           BaseColumns._ID,
@@ -173,8 +216,16 @@ public class WordDefinationProvider extends ContentProvider {
           WordDatabase.KEY_IDENTITY,
           SearchManager.SUGGEST_COLUMN_SHORTCUT_ID,
           SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID};
-
-      return mDictionary.getWord(rowId, columns);
+      
+     // String[] query = new String[] {rowId, null};
+     // if(screen_view == false)
+      //{
+    //	  query[1] = IDENTITY_1;
+     // }else
+      //{
+    //	  query[1] = IDENTITY_2;
+     // }
+      return mDictionary.getWord(selectionArgs, columns);
     }
 
     /**
@@ -212,13 +263,11 @@ public class WordDefinationProvider extends ContentProvider {
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
     	Log.e(TAG, "update ++");
-    	//switch (sURIMatcher.match(uri))
-    	//{
-    	
-    	//}
+    
+    	String rowId = uri.getLastPathSegment();
+    	Log.e(TAG, "uri:"+ uri + " rowId:" + rowId);
     	Log.e(TAG, "sURIMatcher.match(uri) : " + sURIMatcher.match(uri));
-    	return mDictionary.updateIndenty("0");
-        //throw new UnsupportedOperationException();
+    	return mDictionary.updateIndenty( selectionArgs);
     }
   
 

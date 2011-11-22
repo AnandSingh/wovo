@@ -32,13 +32,13 @@ import android.widget.AdapterView.OnItemClickListener;
  */
 public class MainSearchWordActivity extends Activity {
 	private static final String TAG = "MainSearchWordActivity";
+	private static final String IDENTITY_1 = "1";
+	private static final String IDENTITY_2 = "2";
     private TextView mTextView;
     private ListView mListView;
-	private Button btnNxt;
-	private Button btnBck;
-	private Button btnMem;
 	private boolean mloaded = false;
-	private int line_count = 0;
+	//private int line_count = 0;
+	private Boolean view = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,12 +49,9 @@ public class MainSearchWordActivity extends Activity {
 
         mTextView = (TextView) findViewById(R.id.text);
         mListView = (ListView) findViewById(R.id.list);
-    	//btnNxt = (Button) findViewById(R.id.button1);
-		//btnBck = (Button) findViewById(R.id.button2);
-		//btnMem = (Button) findViewById(R.id.button_mem);
 
 		Bundle bundle = getIntent().getExtras();
-		Boolean view = bundle.getBoolean("VIEW");
+		view = bundle.getBoolean("VIEW");
          
 		Log.e(TAG, " view :" + view);
 		
@@ -75,15 +72,14 @@ public class MainSearchWordActivity extends Activity {
     private void handleIntent(Intent intent, boolean mloaded) {
     	Log.e(TAG, "handleIntent +++ ");
     	Log.e(TAG, "intent.getAction() : " + intent.getAction());
-    	//if(mloaded)
-    	//{
-    		if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+  		
+    	if (Intent.ACTION_VIEW.equals(intent.getAction())) {
     			Log.e(TAG," --- ACTION_VIEW ---");
     			// handles a click on a search suggestion; launches activity to show word
     			Intent wordIntent = new Intent(this, ShowWordDefActivity.class);
     			wordIntent.setData(intent.getData());
-    			 // this will tell that this is not from the search option
-    			wordIntent.putExtra("SEARCH", true);
+    			wordIntent.putExtra("VIEW", view);
+    			wordIntent.putExtra("SEARCH", true );
     			startActivity(wordIntent);
     			finish();
     	    } else if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
@@ -95,29 +91,14 @@ public class MainSearchWordActivity extends Activity {
 
     	    }else
     	    {
-    	    	if(line_count == 0)
-    	    	{
-    	    		line_count = 1;
-    	    	}
-    	    	displayWordDef();
     	    	Intent wordIntent = new Intent(this, ShowWordDefActivity.class);
     			wordIntent.setData(intent.getData());
     			// this will tell that this is not from the search option
-    	    	wordIntent.putExtra("SEARCH", false);
+    			wordIntent.putExtra("VIEW", view);
+    			wordIntent.putExtra("SEARCH", false );
       	        startActivity(wordIntent);
     			finish();
       	    }
-    //}
-    //else
-    //{
-    	//Log.e(TAG, "First time loaded --");
-    	//mloaded = true;
-    	//Intent wordIntent = new Intent(this, ShowWordDefActivity.class);
-		//wordIntent.setData(intent.getData());
-		//startActivity(wordIntent);
-		//finish();
-    	
-    //}
         Log.e(TAG, "handleIntent --");
     }
 
@@ -125,17 +106,20 @@ public class MainSearchWordActivity extends Activity {
      * Searches the dictionary and displays results for the given query.
      * @param query The search query
      */
-    private void displayWordDef()
-    {
-    	// Log.e(TAG, "displayWordDef +++");
-         //Cursor cursor = managedQuery(WordDefinationProvider.CONTENT_URI, null,  String.valueOf(line_count),
-         //        new String[] {"wovo"}, null);
-    }
-    
-    private void showResults(String query) {
-        Log.e(TAG, "showResults +++");
-        Cursor cursor = managedQuery(WordDefinationProvider.CONTENT_URI, null, null,
-                                new String[] {query}, null);
+     private void showResults(String query) {
+        Log.e(TAG, "+++++++++++++++++++showResults ++++++++++++++++++++");
+        Cursor cursor = null;
+        if(view == false)
+        {
+             cursor = managedQuery(WordDefinationProvider.CONTENT_URI, null, null,
+                                new String[] {query, IDENTITY_1}, null);
+        }
+        if(view == true)
+        {
+        	cursor = managedQuery(WordDefinationProvider.CONTENT_URI, null, null,
+                    new String[] {query, IDENTITY_2}, null);
+	
+        }
 
         if (cursor == null) {
             // There are no results
