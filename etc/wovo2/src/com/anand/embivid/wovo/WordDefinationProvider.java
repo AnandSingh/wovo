@@ -41,14 +41,14 @@ public class WordDefinationProvider extends ContentProvider {
     private static final int REFRESH_SHORTCUT = 3;
     private static final UriMatcher sURIMatcher = buildUriMatcher();
 
-    public static int currentRowId = 0;
+   // public static int currentRowId = 0;
    
     /**
      * Builds up a UriMatcher for search suggestion and shortcut refresh queries.
      */
     private static UriMatcher buildUriMatcher() {
     	
-    	Log.e(TAG, " +++ buildUriMatcher +++");
+    	 Log.e(TAG, " +++ buildUriMatcher +++");
         UriMatcher matcher =  new UriMatcher(UriMatcher.NO_MATCH);
         // to get definitions...
         matcher.addURI(AUTHORITY, "wovodb", SEARCH_WORDS);
@@ -71,9 +71,7 @@ public class WordDefinationProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
     	Log.e(TAG, " +++ onCreate +++");
-    	
-    	mDictionary = new WordDatabase(getContext());
-    	
+       	mDictionary = new WordDatabase(getContext());
         return true;
     }
 
@@ -115,8 +113,8 @@ public class WordDefinationProvider extends ContentProvider {
                {
             	   selargs[1] = IDENTITY_2;
                }
-               Log.e(TAG, "1." + selargs[0]);
-               Log.e(TAG, "2." + selargs[1]);
+              // Log.e(TAG, "1." + selargs[0]);
+              // Log.e(TAG, "2." + selargs[1]);
                 
                 return getSuggestions(selargs);
             case SEARCH_WORDS:
@@ -124,8 +122,8 @@ public class WordDefinationProvider extends ContentProvider {
                   throw new IllegalArgumentException(
                       "selectionArgs must be provided for the Uri: " + uri);
                 }
-               	Log.e(TAG, "1." + selectionArgs[0]);
-               	Log.e(TAG, "2." + selectionArgs[1]);
+               	// Log.e(TAG, "1." + selectionArgs[0]);
+               	// Log.e(TAG, "2." + selectionArgs[1]);
                  return search(selectionArgs);
             case GET_WORD:
                 return getWord(uri, selectionArgs);
@@ -140,8 +138,8 @@ public class WordDefinationProvider extends ContentProvider {
     
       Log.e(TAG, "+++ getSuggestions +++");
       query[0] = query[0].toLowerCase();
-      Log.e(TAG, "" + query[0]);
-      Log.e(TAG, "" + query[1]);
+      //Log.e(TAG, "" + query[0]);
+      //Log.e(TAG, "" + query[1]);
       String[] columns = new String[] {
           BaseColumns._ID,
           WordDatabase.KEY_WORD,
@@ -170,29 +168,20 @@ public class WordDefinationProvider extends ContentProvider {
 
     private Cursor getWord(Uri uri, String[] selectionArgs)
     {
-    	Log.e(TAG, "getWord ++ ");
-     	Log.e(TAG, "uri: " + uri);
+      Log.e(TAG, "getWord ++ ");
+     	//Log.e(TAG, "uri: " + uri);
       String rowId = uri.getLastPathSegment();
-      Log.e(TAG, "rowId : " + rowId);
+      //Log.e(TAG, "rowId : " + rowId);
      
       String[] columns = new String[] {
+    	  WordDatabase.KEY_ID,
           WordDatabase.KEY_WORD,
           WordDatabase.KEY_DEFINITION,
           WordDatabase.KEY_IDENTITY};
-      currentRowId = Integer.valueOf(rowId);
     
-      //String[] query = new String[] {rowId, null};
-      //SharedPreferences app_pref = PreferenceManager.getDefaultSharedPreferences(getContext());
-  	  //screen_view = app_pref.getBoolean("SCREEN_VIEW", false);
-      //if(screen_view == false)
-      //{
-      //	  query[1] = IDENTITY_1;
-      //}else
-      //{
-      //	  query[1] = IDENTITY_2;
-      //}
-      Log.e(TAG, "selectionArgs[0] :" + selectionArgs[0]);
-      Log.e(TAG, "selectionArgs[1] :" + selectionArgs[1]);
+    
+      //Log.e(TAG, "selectionArgs[0] :" + selectionArgs[0]);
+      //Log.e(TAG, "selectionArgs[1] :" + selectionArgs[1]);
       		
      
      return mDictionary.getWord(selectionArgs, columns);
@@ -207,7 +196,7 @@ public class WordDefinationProvider extends ContentProvider {
        * word, using the given item Uri and provide all the columns originally provided with the
        * suggestion query.
        */
-      Log.e(TAG, "refreshShortcut +++");
+   //   Log.e(TAG, "refreshShortcut +++");
       String rowId = uri.getLastPathSegment();
       String[] columns = new String[] {
           BaseColumns._ID,
@@ -262,11 +251,11 @@ public class WordDefinationProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-    	Log.e(TAG, "update ++");
+    	//Log.e(TAG, "update ++");
     
     	String rowId = uri.getLastPathSegment();
-    	Log.e(TAG, "uri:"+ uri + " rowId:" + rowId);
-    	Log.e(TAG, "sURIMatcher.match(uri) : " + sURIMatcher.match(uri));
+    	//Log.e(TAG, "uri:"+ uri + " rowId:" + rowId);
+    	//Log.e(TAG, "sURIMatcher.match(uri) : " + sURIMatcher.match(uri));
     	return mDictionary.updateIndenty( selectionArgs);
     }
   

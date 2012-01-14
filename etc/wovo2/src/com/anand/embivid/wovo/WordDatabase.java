@@ -41,40 +41,29 @@ public class WordDatabase {
     public static final String KEY_DEFINITION = SearchManager.SUGGEST_COLUMN_TEXT_2;
     public static final String KEY_IDENTITY = "Identifier";
     
+    
 
-    private static final String DATABASE_NAME = "wovodb";
+    private static final String DB_NAME = "wovodefdb";
+    private static final String DB_NAME_2 = "wovomemdb";
     private static final String FTS_VIRTUAL_TABLE = "FTSwovoVT";
     private static final int DATABASE_VERSION = 2;
 
     private final DictionaryOpenHelper mDatabaseOpenHelper;
     private static final HashMap<String,String> mColumnMap = buildColumnMap();
     
-    private static String word = null;
-    private static String definition = null;
+    //private static String word = null;
+    //private static String definition = null;
 
     private static SQLiteDatabase mDatabase;
     
     private static Context app_context = null;
-   // private static WordDatabase sInstance = new WordDatabase(getApplicationContext());
-
-	/*public WordDatabase getInstance() {
-		return sInstance;
-	}
-	public static WordDatabase setInstance(WordDatabase sInstance) {
-		WordDatabase.sInstance = sInstance;
-	}
-	public boolean isLoaded()
-	{
-		return mLoaded;
-	}*/
     /**
      * Constructor
      * @param context The Context within which to work, used to create the DB
      */
     public WordDatabase(Context context) {
     	
-    	Log.e(TAG, " WordDatabase >>>>>>>>");
-    	Log.e(TAG, "context: "+ context);
+       	Log.e(TAG, "context: "+ context);
     	app_context = context;
     	mDatabaseOpenHelper = new DictionaryOpenHelper(context);
     }
@@ -110,9 +99,9 @@ public class WordDatabase {
  
     public int updateIndenty(String[] selectionArgs) {
     	
-    	Log.e(TAG,"updateIndenty ++");
-    	Log.e(TAG, "selectionArgs[0]: " + selectionArgs[0]);
-    	Log.e(TAG, "selectionArgs[1]: " + selectionArgs[1]);
+    //	Log.e(TAG,"updateIndenty ++");
+    //	Log.e(TAG, "selectionArgs[0]: " + selectionArgs[0]);
+    //	Log.e(TAG, "selectionArgs[1]: " + selectionArgs[1]);
         //String selection = "rowid = ?";
         //String[] selectionArgs = new String[] {rowId};
 
@@ -133,7 +122,7 @@ public class WordDatabase {
 
    public Cursor getWord(String[] query, String[] columns) {
     	
-    	Log.e(TAG,"getWord ++");
+    //	Log.e(TAG,"getWord ++");
     	//Log.e(TAG, "rowId: " + rowId);
        
     	//String selection = "rowid = ?";
@@ -161,8 +150,8 @@ public class WordDatabase {
      */
     public Cursor getWordMatches(String[] query, String[] columns) {
     	
-    	Log.e(TAG,"getWordMatches ++");
-    	Log.e(TAG, "query: " + query[0]  + ", " + query[1] );
+    //	Log.e(TAG,"getWordMatches ++");
+    //	Log.e(TAG, "query: " + query[0]  + ", " + query[1] );
     	
         String selection = KEY_WORD + " MATCH ?" + " AND " + KEY_IDENTITY + "=?" ;
         String[] selectionArgs = new String[] {query[0]+"*", query[1]};
@@ -198,7 +187,7 @@ public class WordDatabase {
          * actual columns in the database, creating a simple column alias mechanism
          * by which the ContentProvider does not need to know the real column names
          */
-    	Log.e(TAG, "query ++");
+    //	Log.e(TAG, "query ++");
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(FTS_VIRTUAL_TABLE);
         builder.setProjectionMap(mColumnMap);
@@ -212,7 +201,7 @@ public class WordDatabase {
         if (cursor == null) {
             return null;
         } else if (!cursor.moveToFirst()) {
-        	
+        	//return cursor;
             cursor.close();
             return null;
         }
@@ -242,10 +231,10 @@ public class WordDatabase {
         		"create table " + MYDATABASE_TABLE + " ("
         		+ KEY_ID + " integer primary key autoincrement, "
         		+ KEY_CONTENT1 + " text not null, "
-        		+ KEY_CONTENT2 + " integer);";
-*/
+        		+ KEY_CONTENT2 + " integer);";*/
+
         DictionaryOpenHelper(Context context) {
-            super(context, DATABASE_NAME, null, DATABASE_VERSION);
+            super(context, DB_NAME, null, DATABASE_VERSION);
             mHelperContext = context;
         }
 
@@ -254,13 +243,7 @@ public class WordDatabase {
             Log.e(TAG, "-------------  OnCreate SQLite database -------");
         	mDatabase = db;
             mDatabase.execSQL(FTS_TABLE_CREATE);
-            loadDictionary();
-        }
-
-        /**
-         * Starts a thread to load the database table with words
-         */
-        private void loadDictionary() {
+            // loadDictionary();
             new Thread(new Runnable() {
                 public void run() {
                     try {
@@ -270,8 +253,12 @@ public class WordDatabase {
                     }
                 }
             }).start();
+
         }
 
+        /**
+         * Starts a thread to load the database table with words
+         */
         private void loadWords() throws IOException {
             Log.e(TAG, "Loading words.....");
             
@@ -286,36 +273,24 @@ public class WordDatabase {
                     long id = addWord(strings[0].trim(), strings[1].trim(), IDENTITY_1);
                    
                     if (id < 0) {
-                        Log.e(TAG, "unable to add word: " + strings[0].trim());
+                      //  Log.e(TAG, "unable to add word: " + strings[0].trim());
                     }
                     else{
-                    	Log.e(TAG, "word added: " + strings[0].trim() + " : " + strings[1].trim());
+                    //	Log.e(TAG, "word added: " + strings[0].trim() + " : " + strings[1].trim());
                     }
                 }
             } finally {
                 reader.close();
             }
+            Log.d(TAG, "DONE loading words.");
             SharedPreferences app_pref = PreferenceManager.getDefaultSharedPreferences(app_context);
     		SharedPreferences.Editor editor = app_pref.edit();
     		editor.putInt("DEF_LINE_CNT", 175);
     		editor.putInt("USR_LINE_CNT", 0);
+			editor.putBoolean("DB_LOADED", true);
     		editor.commit();
-            //mLoaded = true;
-            Log.d(TAG, "DONE loading words.");
         }
-
-      /*  public int updateIdentifier(SQLiteDatabase db, String def, String newIdentity, String string) {
-            
-        	ContentValues initialValues = new ContentValues();
-            Log.e(TAG,"updateIdentifier ++");
-            Log.e(TAG,"word: "+ word);
-            Log.e(TAG,"def: " + definition);
-            //initialValues.put(KEY_WORD, word);
-            //initialValues.put(KEY_DEFINITION, definition);
-            initialValues.put(KEY_IDENTITY, "2");
-            Log.e(TAG, "" + db);
-            return db.update(FTS_VIRTUAL_TABLE, initialValues, KEY_WORD+"=?", new String []{word});
-        }*/
+      
         /**
          * Add a word to the dictionary.
          * @return rowId or -1 if failed
@@ -325,7 +300,7 @@ public class WordDatabase {
             initialValues.put(KEY_WORD, word);
             initialValues.put(KEY_DEFINITION, definition);
             initialValues.put(KEY_IDENTITY, identity);
-            
+    
             return mDatabase.insert(FTS_VIRTUAL_TABLE, null, initialValues);
         }
 
@@ -337,5 +312,4 @@ public class WordDatabase {
             onCreate(db);
         }
     }
-
 }

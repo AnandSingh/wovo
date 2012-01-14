@@ -2,6 +2,8 @@ package com.anand.embivid.wovo;
 
 
 
+import java.io.IOException;
+
 import com.google.ads.*;
 import android.app.Activity;
 import android.app.SearchManager;
@@ -9,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -42,128 +45,18 @@ public class WovoActivity extends Activity {
 	private int intLastLine = 0;
 	private String line = null;
 	private WordDatabase mDictionary;
+    private Boolean databaseLoaded = false;
 	//private AdView adView;
-
-	
-
-	
-
-
-	
-
-	@Override
-	public void onBackPressed() {
-	
-    //Log.d(this.getClass().getName(), "back button pressed");
-	// do something on back.
-	ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);
-	if(flip == 1)
-	{
-		 super.onBackPressed();
-	}
-    if(flip == 2)
-    {
-    	
-    	flip = 1;
-		// Set an animation from res/animation: I pick push left in
-		vf.setAnimation(AnimationUtils.loadAnimation(this.getApplicationContext(), R.anim.fade));
-		vf.showPrevious();    	
-    }
-    if(flip == 3)
-    {
-    	flip = 1;
-    	vf.showPrevious();   
-    	vf.showPrevious();   
-    }
-   
-	return;
-	}
-	
-	@Override 
-	public void onSaveInstanceState(Bundle outState) 
-	{
-		//adView.destroy();
-		//---save whatever you need to persist—
-		outState.putInt("view", Def0User1 );
-		outState.putInt("flip", flip);
-		super.onSaveInstanceState(outState); 
-		//Lists.getInstance().saveLrnWordList();
-	}
-	
-	@Override
-	public void onRestoreInstanceState(Bundle savedInstanceState) 
-	{
-		super.onRestoreInstanceState(savedInstanceState);
-		//---retrieve the information persisted earlier---
-		//adView.loadAd(new AdRequest());
-		Def0User1 = savedInstanceState.getInt("view");   
-		flip = savedInstanceState.getInt("flip"); 
-		if(flip == 2)
-		{   
-			// Get the ViewFlipper from the layout
-			ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);
-			boolean view = false;
-			if(Def0User1 == 0)
-			{
-				btnMem.setText(" I have memorized this word ! ");
-				view = false;
-			}else
-			{
-				btnMem.setText(" I hadn't memorized this word ! ");
-				view = true;
-			}
-			
-			//Lists.getInstance().setView(view);
-
-			//if( true == InitWovo(view))
-			{
-				flip = 2;
-				// Set an animation from res/animation:
-					// vf.setAnimation(AnimationUtils.loadAnimation(this.getApplicationContext(), R.anim.push_left_in));
-				vf.showNext();
-
-			}
-			//else
-			{
-				Context context = getApplicationContext();
-				CharSequence text = " Fail to Load Database ";
-				int duration = Toast.LENGTH_SHORT;
-
-				Toast toast = Toast.makeText(context, text, duration);
-				toast.show();
-			}
-		}
-		if(flip == 3)
-		{
-			ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);
-			vf.showNext();
-			vf.showNext();
-		}
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-		//Log.v("wovo", " +++ onPause +++");
-//		Lists.getInstance().readWriteLrnWordList(1);
-		//Lists.getInstance().readWriteLrnWordList(0);
-	}
-	
-	@Override
-	public void onResume() {
-		super.onResume();
-		//Log.v("wovo", " +++ onResume +++");
-	//	Lists.getInstance().readWriteLrnWordList(0);
-	}
-	
-	 @Override
-	 public void onDestroy() {
-	    //adView.destroy();
-	    super.onDestroy();
-	  }
 
    public void LoadSearchAcitvity(boolean view)
    {
+	   databaseLoaded = app_pref.getBoolean("DB_LOADED", false);
+		if(databaseLoaded == false)
+		{
+			CharSequence text = "Loading Database ...";
+			Toast toast = Toast.makeText(this, text, Toast.LENGTH_SHORT);
+			toast.show();
+		}else{
 	   CharSequence text = null;
 	   Log.e(TAG, "LoadSearchAcitvity ++");
 	   boolean flag = false;
@@ -202,8 +95,18 @@ public class WovoActivity extends Activity {
     	   Toast toast = Toast.makeText(this, text, Toast.LENGTH_SHORT);
 		   toast.show();
        }
+		}
 
    }
+   private void prepareDatase() throws IOException {
+	
+		
+		//wait if database loaded
+		Uri uri = Uri.withAppendedPath(WordDefinationProvider.CONTENT_URI,
+	            String.valueOf(1));
+		String[] selectionArgs = new String[] {uri.getLastPathSegment(), "1"};
+	 	managedQuery(uri, null, null, selectionArgs, null);
+	}
    
 	/** Called when the activity is first created. */
 	@Override
@@ -211,18 +114,6 @@ public class WovoActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		Intent intent = getIntent();
-
-		// from click on search results
-		//Lists.getInstance().ensureLoaded(getResources());
-		//    String word = intent.getDataString();
-
-		//Log.d("wovo", intent.toString());
-		if (intent.getExtras() != null) {
-		//	Log.d("wovo", intent.getExtras().keySet().toString());
-		}
-
-		
 		// Get the app's shared preferences
 		app_pref = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -240,33 +131,36 @@ public class WovoActivity extends Activity {
 		//adView = (AdView) findViewById(R.id.adView);
 
 		tvDebug.setText("");
-
-		
-		//mDictionary = new WordDatabase(getApplicationContext());
-
-		//while(mDictionary.isLoaded() == false);
-		// wiat till it load or checks the data base
-		//while(Lists.getInstance().isLoaded() == false);
-
-
-        ///for creating ads
-	    // Create the adView
-	    //adView = new AdView(this, AdSize.BANNER, "a14eb39eac9a049");
-
-	    // Lookup your LinearLayout assuming it’s been given
-	    // the attribute android:id="@+id/mainLayout"
-	    //LinearLayout layout = (LinearLayout)findViewById(R.id.linearLayout1);
-
-	    // Add the adView to it
-	    //layout.addView(adView);
-		//adView.loadAd(new AdRequest());
-		
+		databaseLoaded = app_pref.getBoolean("DB_LOADED", false);
 	
+		if(false == databaseLoaded)
+		{
+			Uri uri = Uri.withAppendedPath(WordDefinationProvider.CONTENT_URI,
+		            String.valueOf(1));
+			String[] selectionArgs = new String[] {uri.getLastPathSegment(), "1"};
+		 	managedQuery(uri, null, null, selectionArgs, null);
+			//app_context = this;
+			/*CharSequence text = "Please wait .. \n First time preparing database";
+			Toast toast = Toast.makeText(this, text, Toast.LENGTH_SHORT);
+			toast.show();
+	     	new Thread(new Runnable() {
+            public void run() {
+                try {
+                    prepareDatase();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+           }).start();
+	     	while(false == app_pref.getBoolean("DB_LOADED", false));
+		   toast = Toast.makeText(this, "Finish preparing database", Toast.LENGTH_SHORT);
+			toast.show();*/
+		}
 		
-	    // for default screen
+		
+		// for default screen
 		btnDft.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
-				// Get the ViewFlipper from the layout
 				LoadSearchAcitvity(false);
 			}
 		});
@@ -274,7 +168,6 @@ public class WovoActivity extends Activity {
 		btnLrn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				LoadSearchAcitvity(true);
-				
 			}
 		});
 
@@ -283,12 +176,20 @@ public class WovoActivity extends Activity {
 
 		btnRst.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
+				
+				databaseLoaded = app_pref.getBoolean("DB_LOADED", false);
+				if(databaseLoaded == false)
+				{
+					
+				}else{
+				
 				ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);
 				flip = 3;
 				// Set an animation from res/animation: I pick push left in
 				//vf.setAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.fade));
 				vf.showNext();//showPrevious();
 				vf.showNext();
+				}
 				
 			}
 		});

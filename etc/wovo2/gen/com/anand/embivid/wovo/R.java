@@ -50,18 +50,24 @@ public final class R {
         public static final int button_mem=0x7f0a000b;
         public static final int button_no=0x7f0a0010;
         public static final int button_reset=0x7f0a0005;
+        public static final int button_search=0x7f0a0016;
         public static final int button_yes=0x7f0a000f;
         public static final int definition=0x7f0a000a;
+        public static final int definition_res=0x7f0a0013;
         public static final int details=0x7f0a0000;
         public static final int linearLayout1=0x7f0a0001;
+        public static final int linearLayout2=0x7f0a0015;
+        public static final int linearLayout3=0x7f0a0017;
+        public static final int linearLayout4=0x7f0a0018;
         public static final int list=0x7f0a0007;
         public static final int num=0x7f0a0008;
         public static final int rest_text2=0x7f0a000e;
-        public static final int search=0x7f0a0013;
-        public static final int text=0x7f0a0012;
+        public static final int search=0x7f0a0019;
+        public static final int text=0x7f0a0014;
         public static final int tv_country=0x7f0a0002;
         public static final int tv_embvid=0x7f0a0006;
         public static final int word=0x7f0a0009;
+        public static final int word_res=0x7f0a0012;
     }
     public static final class layout {
         public static final int main=0x7f030000;
@@ -86,23 +92,24 @@ public final class R {
         public static final int hello=0x7f070001;
         /**  The menu entry that invokes search. 
          */
-        public static final int menu_search=0x7f070006;
+        public static final int menu_search=0x7f070007;
         /**  Search failure message. 
          */
-        public static final int no_results=0x7f070009;
+        public static final int no_results=0x7f07000a;
         public static final int reset_text=0x7f070000;
         /**  The hint text that appears in the search box. 
          */
-        public static final int search_hint=0x7f070005;
+        public static final int search_hint=0x7f070006;
         /**  General instructions in the main activity. 
          */
-        public static final int search_instructions=0x7f070008;
+        public static final int search_instructions=0x7f070009;
         /**  The label for use as a searchable item 
          */
-        public static final int search_label=0x7f070004;
+        public static final int search_label=0x7f070005;
+        public static final int search_string=0x7f070004;
         /**  The description that will show up in the search settings for this source.  
          */
-        public static final int settings_description=0x7f070007;
+        public static final int settings_description=0x7f070008;
     }
     public static final class xml {
         public static final int searchable=0x7f050000;
