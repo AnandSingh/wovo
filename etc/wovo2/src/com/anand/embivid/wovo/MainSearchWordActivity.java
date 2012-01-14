@@ -1,6 +1,14 @@
 package com.anand.embivid.wovo;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
 
 import android.app.Activity;
 import android.app.ActionBar;
@@ -61,20 +69,27 @@ public class MainSearchWordActivity extends Activity {
 	//private String currentWord = null;
 	private boolean memory1def0 = false;
 	private boolean search1default0 = false;
+	//private RandomAccessFile raf = null;
 	//private static final int TOTAL_LINES =  175;
 	
 	private File lrn_file = null;
-	private int[] lrn_lines = new int[175];//[4759];
-	private int lrn_cnt = 0;
+	private int[] lrn_lines = new int[176];//[4759];
+	//private int lrn_cnt = 0;
 	private int curr_ridx = 0;
+	
+	private Boolean search = false;
 
-	/*
+	
 	@Override
 	public void onBackPressed() {
-	//	Log.e(TAG, "onBackPressed ++");
-	
+	 Log.e(TAG, "onBackPressed ++");
+	 if(search == true)
+	 {
+		 search = false;
+	 }
 	 super.onBackPressed();
-	}*/
+	}
+	
 	public int dsipalyLine(int line_num, int nxt1bck0)
 	{
 		if(curr_cursor == null)
@@ -243,6 +258,118 @@ public class MainSearchWordActivity extends Activity {
     }
 
 }
+	
+	public synchronized void ensureLoaded() {
+		 
+	//	if (mLoaded) return;
+
+		new Thread(new Runnable() {
+			public void run() {
+				try {
+					loadWords();
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		}).start();
+	}
+	
+	private synchronized void loadWords() throws IOException {
+		//if (mLoaded) return;
+
+		Log.d("wovo", "loading words");
+		// already there, nothing to do.
+		//Log.d("wovo", "return.....");
+		try
+		{
+			if(lrn_file == null)
+			{
+				lrn_file = new File("/data/data/com.anand.embivid.wovo/lrn.dat");
+			}
+			readWriteLrnWordList(0);
+			Log.d("wovo", "\"lrn.dat\" File Loaded, Size :" + lrn_file.length());
+			Log.d("wovo", "\"lrn.dat\" loading saved words into memory");
+		}
+		catch (Exception e)
+		{
+			Log.d("wovo init", e.toString());
+		}
+
+		return;
+	}
+	
+	public synchronized void readWriteLrnWordList(int read0write1)
+	{
+		try {
+			if(lrn_file.exists() == false)
+			{
+			  lrn_file = new File("/data/data/com.anand.embivid.wovo/lrn.dat");
+			  Log.e("wovo", "File Found .....");
+			}
+			Process process = Runtime.getRuntime().exec("sh");
+			DataOutputStream os = new DataOutputStream(process.getOutputStream());
+			os.writeBytes("chmod 755 /data/data/com.anand.embivid.wovo/lrn.dat\n");
+
+			os.writeBytes("exit\n");
+			os.flush(); 
+
+			if(read0write1 == 1)
+			{
+				Log.d("WOVO", "=== Writing File === " + lrn_file);
+				// Wrap the FileOutputStream with a DataOutputStream
+				DataOutputStream data_out = new DataOutputStream (new FileOutputStream (lrn_file));
+				// Write the data to the file in an integer/double pair
+
+						for(int i = 0; i<176;i++)
+						{
+							data_out.writeInt (lrn_lines[i]);
+							Log.d("wovo", "w* " + i + ". " + lrn_lines[i]);
+						}
+					data_out.close();
+			}
+			
+			
+			if(read0write1 == 0)
+			{
+				Log.d("WOVO", "===Reading File=== " + lrn_file);
+				for(int i =0 ; i<176; i++)
+				{
+				lrn_lines[i] = 0;
+				}
+				
+				//FileInputStream file_input = new FileInputStream (lrn_file);
+				DataInputStream data_in    = new DataInputStream (new FileInputStream (lrn_file) );
+
+				int lrn_cnt = 0;
+				while (true) {
+					try {
+						lrn_lines[lrn_cnt] = data_in.readInt ();
+						Log.d("wovo", "r*" + lrn_cnt + ". " + lrn_lines[lrn_cnt]);
+						lrn_cnt++;
+					}
+					catch (EOFException eof) {
+						System.out.println ("End of File");
+
+						break;
+					}
+				}
+				data_in.close ();
+			}
+
+		} catch (Exception e) {
+			Log.e("wovo", "Exception");
+			Log.e("wovo", e.toString());
+			return;
+		}
+	}
+
+	@Override
+	public boolean onSearchRequested()
+	{
+		search = true;
+		return super.onSearchRequested();
+	}
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -268,6 +395,8 @@ public class MainSearchWordActivity extends Activity {
 		memory1def0 = view;
          
 		Log.e(TAG, " view :" + view);
+		
+		ensureLoaded();
 		
         handleIntent(getIntent(), mloaded);
         
@@ -298,7 +427,8 @@ public class MainSearchWordActivity extends Activity {
 			   	    String[] selectionArgs = new String[] {""+currentWord, IDENTITY_2};
 			   		getContentResolver().update(WordDefinationProvider.CONTENT_URI, null, null, selectionArgs);
 			   		text =  " \"" + currentWord + "\" added to memorized word list ";
-			   		lrn_lines[curr_ridx] = 1;
+			   				   					   		
+			   		lrn_lines[curr_ridx-1] = 1;
 			   		
 			   		line = curr_cursor.getPosition();// + 1;
 			   		curr_cursor.close();
@@ -324,8 +454,10 @@ public class MainSearchWordActivity extends Activity {
 			   		String[] selectionArgs = new String[] {""+currentWord, IDENTITY_1};
 			   		getContentResolver().update(WordDefinationProvider.CONTENT_URI, null, null, selectionArgs);
 	    	   		text =  " \"" + currentWord + "\" removed from memorized word list ";
-	    	   		lrn_lines[curr_ridx] = 0;
-			   		line = curr_cursor.getPosition();// - 1;
+	    	   		 		
+		    		lrn_lines[curr_ridx-1] = 0;
+			   		
+	    	   		line = curr_cursor.getPosition();// - 1;
 			   		curr_cursor.close();
 			   	 	
 			   		uri = Uri.withAppendedPath(WordDefinationProvider.CONTENT_URI,
@@ -476,6 +608,26 @@ public class MainSearchWordActivity extends Activity {
 			Log.e(TAG,srowNum[0] + " " + Integer.valueOf(srowNum[0]));
 			
 			rowNum =  Integer.valueOf(srowNum[0]) - 1;
+			int dec = 0;
+			for(int i=0; i<=rowNum; i++)
+			{
+				if(memory1def0 == false)
+	        	{
+			     	if(lrn_lines[i] == 1)
+			     	{
+			     		dec++;
+			     	}
+	        	}
+				if(memory1def0 ==true)
+				{
+					if(lrn_lines[i] == 0)
+			     	{
+			     		dec++;
+			     	}
+				}
+			}
+			rowNum = rowNum - dec;
+			Log.e(TAG, "''''''" + rowNum + " " + dec);
 			
 		}else
         {
@@ -576,11 +728,37 @@ public class MainSearchWordActivity extends Activity {
         return true;
     }
 */
+     
+    @Override
+ 	public void onPause() {
+ 		super.onPause();
+ 		Log.v("wovo", " +++ onPause +++");
+ 		if(search == false)
+ 		{
+ 			readWriteLrnWordList(1);
+ 		}
+    }
+ 	
+ 	@Override
+ 	public void onResume() {
+ 		super.onResume();
+ 		Log.v("wovo", " +++ onResume +++");
+ 		if(search ==false)
+ 		{
+ 			readWriteLrnWordList(0);
+ 		}
+ 		if(search == true)
+ 		{
+ 			search = false;
+ 		}
+ 	}
+ 	
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
     	Log.e(TAG, "" + item.getItemId());
         switch (item.getItemId()) {
             case R.id.search:
+            	Log.e(TAG,"R.id.search:");
                 onSearchRequested();
                 return true;
             case android.R.id.home:

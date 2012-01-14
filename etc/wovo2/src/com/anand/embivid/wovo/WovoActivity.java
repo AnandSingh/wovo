@@ -2,6 +2,7 @@ package com.anand.embivid.wovo;
 
 
 
+import java.io.File;
 import java.io.IOException;
 
 import com.google.ads.*;
@@ -197,9 +198,13 @@ public class WovoActivity extends Activity {
 		btnYes.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				SharedPreferences.Editor editor = app_pref.edit();
+				editor.putInt("DEF_LINE_CNT", 175);
+				editor.putInt("USR_LINE_CNT", 175);
 				editor.putInt("def_Line", 1);
 				editor.putInt("user_Line", -1); 
 				editor.commit();
+				File lrn_file = new File("/data/data/com.anand.embivid.wovo/lrn.dat");
+				lrn_file.delete();
 				//Lists.getInstance().reset();
 				Def0User1 = 0;
 				flip = 1;
