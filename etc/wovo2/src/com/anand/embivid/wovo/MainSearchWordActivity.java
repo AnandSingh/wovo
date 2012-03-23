@@ -20,7 +20,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
+//import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -78,11 +78,11 @@ public class MainSearchWordActivity extends Activity {
 	private int curr_ridx = 0;
 	
 	private Boolean search = false;
-
+    private Boolean search_click = false;
 	
 	@Override
 	public void onBackPressed() {
-	 Log.e(TAG, "onBackPressed ++");
+	// Log.e(TAG, "onBackPressed ++");
 	 if(search == true)
 	 {
 		 search = false;
@@ -128,10 +128,10 @@ public class MainSearchWordActivity extends Activity {
     	definition.setText(curr_cursor.getString(dIndex));
     	curr_ridx = Integer.valueOf(curr_cursor.getString(ridx));
     	
-    	Log.e("TAG","  >>> " + curr_cursor.getPosition());
-    	Log.e("TAG","  >>> " + curr_ridx);
-    	Log.e("TAG","  >>> " + word.getText());
-    	Log.e("TAG","  >>> " + definition.getText());
+    	//Log.e("TAG","  >>> " + curr_cursor.getPosition());
+    	//Log.e("TAG","  >>> " + curr_ridx);
+    	//Log.e("TAG","  >>> " + word.getText());
+    	//Log.e("TAG","  >>> " + definition.getText());
     	
     	SharedPreferences.Editor editor = app_pref.edit();
 		if(memory1def0 == false)
@@ -167,13 +167,13 @@ public class MainSearchWordActivity extends Activity {
 	Uri uri = Uri.withAppendedPath(WordDefinationProvider.CONTENT_URI,
             String.valueOf(1));
     	
-	Log.e(TAG, "+++++++++++++++++++++++++");
-	Log.e(TAG, "memory1def0: " + memory1def0);
-   	Log.e(TAG, "def: " + def_total_cont);
-   	Log.e(TAG, "usr: " + usr_total_cont);
-	Log.e(TAG, "curr_line_count:" + curr_line_count);
-   	Log.e(TAG, "uri: " + uri);
-   	Log.e(TAG, "+++++++++++++++++++++++++");
+	//Log.e(TAG, "+++++++++++++++++++++++++");
+	//Log.e(TAG, "memory1def0: " + memory1def0);
+   	//Log.e(TAG, "def: " + def_total_cont);
+   	//Log.e(TAG, "usr: " + usr_total_cont);
+	//Log.e(TAG, "curr_line_count:" + curr_line_count);
+   	//Log.e(TAG, "uri: " + uri);
+   	//Log.e(TAG, "+++++++++++++++++++++++++");
    	
     if(memory1def0 == false)
 	{
@@ -225,13 +225,13 @@ public class MainSearchWordActivity extends Activity {
 
    if(curr_cursor != null)
     {
-        Log.e(TAG," Total count >>> " + curr_cursor.getCount());
-        Log.e(TAG," curr count >>> " + curr_line_count);
+      //  Log.e(TAG," Total count >>> " + curr_cursor.getCount());
+       // Log.e(TAG," curr count >>> " + curr_line_count);
         
-        Log.e(TAG, "+++++++++++++++++++++++++");
-    	Log.e(TAG, "def: " + def_total_cont);
-    	Log.e(TAG, "usr: " + usr_total_cont);
-    	Log.e(TAG, "+++++++++++++++++++++++++");
+       // Log.e(TAG, "+++++++++++++++++++++++++");
+    	//Log.e(TAG, "def: " + def_total_cont);
+    	//Log.e(TAG, "usr: " + usr_total_cont);
+    	//Log.e(TAG, "+++++++++++++++++++++++++");
     	
         
         SharedPreferences.Editor editor = app_pref.edit();
@@ -243,7 +243,8 @@ public class MainSearchWordActivity extends Activity {
 
         if(curr_cursor.moveToPosition(curr_line_count))
     	{
-       		int wIndex = curr_cursor.getColumnIndexOrThrow(WordDatabase.KEY_WORD);
+        	int ridx = curr_cursor.getColumnIndexOrThrow(WordDatabase.KEY_ID);
+        	int wIndex = curr_cursor.getColumnIndexOrThrow(WordDatabase.KEY_WORD);
     		int dIndex = curr_cursor.getColumnIndexOrThrow(WordDatabase.KEY_DEFINITION);
     		//int iIndex = curr_cursor.getColumnIndexOrThrow(WordDatabase.KEY_IDENTITY);
 
@@ -251,9 +252,12 @@ public class MainSearchWordActivity extends Activity {
     		num.setText(""+idx+ " / " + curr_cursor.getCount());
     		word.setText(curr_cursor.getString(wIndex));
     		definition.setText(curr_cursor.getString(dIndex));
-    		Log.e("TAG","  >>> " + word.getText());
-    		Log.e("TAG","  >>> " + definition.getText());
-    		Log.e("TAG","  >>> " + curr_cursor.getPosition());
+    		
+    		curr_ridx = Integer.valueOf(curr_cursor.getString(ridx));
+    		
+    		//Log.e("TAG","  >>> " + word.getText());
+    		//Log.e("TAG","  >>> " + definition.getText());
+    		//Log.e("TAG","  >>> " + curr_cursor.getPosition());
        	}
     }
 
@@ -276,10 +280,7 @@ public class MainSearchWordActivity extends Activity {
 	
 	private synchronized void loadWords() throws IOException {
 		//if (mLoaded) return;
-
-		Log.d("wovo", "loading words");
-		// already there, nothing to do.
-		//Log.d("wovo", "return.....");
+		//Log.d("wovo", "loading words");
 		try
 		{
 			if(lrn_file == null)
@@ -287,12 +288,11 @@ public class MainSearchWordActivity extends Activity {
 				lrn_file = new File("/data/data/com.anand.embivid.wovo/lrn.dat");
 			}
 			readWriteLrnWordList(0);
-			Log.d("wovo", "\"lrn.dat\" File Loaded, Size :" + lrn_file.length());
-			Log.d("wovo", "\"lrn.dat\" loading saved words into memory");
+			//Log.d("wovo", "\"lrn.dat\" File Loaded, Size :" + lrn_file.length());
 		}
 		catch (Exception e)
 		{
-			Log.d("wovo init", e.toString());
+			//Log.d("wovo init", e.toString());
 		}
 
 		return;
@@ -304,7 +304,7 @@ public class MainSearchWordActivity extends Activity {
 			if(lrn_file.exists() == false)
 			{
 			  lrn_file = new File("/data/data/com.anand.embivid.wovo/lrn.dat");
-			  Log.e("wovo", "File Found .....");
+			  //Log.e("wovo", "File Found .....");
 			}
 			Process process = Runtime.getRuntime().exec("sh");
 			DataOutputStream os = new DataOutputStream(process.getOutputStream());
@@ -315,7 +315,7 @@ public class MainSearchWordActivity extends Activity {
 
 			if(read0write1 == 1)
 			{
-				Log.d("WOVO", "=== Writing File === " + lrn_file);
+				//Log.d("WOVO", "=== Writing File === " + lrn_file);
 				// Wrap the FileOutputStream with a DataOutputStream
 				DataOutputStream data_out = new DataOutputStream (new FileOutputStream (lrn_file));
 				// Write the data to the file in an integer/double pair
@@ -323,7 +323,7 @@ public class MainSearchWordActivity extends Activity {
 						for(int i = 0; i<176;i++)
 						{
 							data_out.writeInt (lrn_lines[i]);
-							Log.d("wovo", "w* " + i + ". " + lrn_lines[i]);
+					//		Log.d("wovo", "w* " + i + ". " + lrn_lines[i]);
 						}
 					data_out.close();
 			}
@@ -331,24 +331,24 @@ public class MainSearchWordActivity extends Activity {
 			
 			if(read0write1 == 0)
 			{
-				Log.d("WOVO", "===Reading File=== " + lrn_file);
+				// Log.d("WOVO", "===Reading File=== " + lrn_file);
 				for(int i =0 ; i<176; i++)
 				{
 				lrn_lines[i] = 0;
 				}
 				
-				//FileInputStream file_input = new FileInputStream (lrn_file);
+				// FileInputStream file_input = new FileInputStream (lrn_file);
 				DataInputStream data_in    = new DataInputStream (new FileInputStream (lrn_file) );
 
 				int lrn_cnt = 0;
 				while (true) {
 					try {
 						lrn_lines[lrn_cnt] = data_in.readInt ();
-						Log.d("wovo", "r*" + lrn_cnt + ". " + lrn_lines[lrn_cnt]);
+					//	Log.d("wovo", "r*" + lrn_cnt + ". " + lrn_lines[lrn_cnt]);
 						lrn_cnt++;
 					}
 					catch (EOFException eof) {
-						System.out.println ("End of File");
+						//System.out.println ("End of File");
 
 						break;
 					}
@@ -357,8 +357,8 @@ public class MainSearchWordActivity extends Activity {
 			}
 
 		} catch (Exception e) {
-			Log.e("wovo", "Exception");
-			Log.e("wovo", e.toString());
+			//Log.e("wovo", "Exception");
+			//Log.e("wovo", e.toString());
 			return;
 		}
 	}
@@ -374,7 +374,7 @@ public class MainSearchWordActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e(TAG, "onCreate +++ ");
+      //  Log.e(TAG, "onCreate +++ ");
         
         setContentView(R.layout.search);
 
@@ -394,7 +394,7 @@ public class MainSearchWordActivity extends Activity {
 		view = bundle.getBoolean("VIEW");
 		memory1def0 = view;
          
-		Log.e(TAG, " view :" + view);
+	//	Log.e(TAG, " view :" + view);
 		
 		ensureLoaded();
 		
@@ -403,7 +403,7 @@ public class MainSearchWordActivity extends Activity {
         // Attach actions to buttons
         btnSearch.setOnClickListener(new OnClickListener() {
            	public void onClick(View v) {
-           	    Log.e(TAG, "btnSearch +++ ");
+           	//    Log.e(TAG, "btnSearch +++ ");
            		onSearchRequested();
                 }
             });
@@ -418,14 +418,14 @@ public class MainSearchWordActivity extends Activity {
 				CharSequence currentWord = word.getText();
 				int line = 0;
 				
-				Log.e(TAG,"getContentResolver().update() --->");
+		//		Log.e(TAG,"getContentResolver().update() --->");
 			   	Uri uri = Uri.withAppendedPath(WordDefinationProvider.CONTENT_URI,
 		                String.valueOf(curr_cursor.getPosition()+1));
 			   	
 			   	if(memory1def0 == false)
 			   	{
-			   	    String[] selectionArgs = new String[] {""+currentWord, IDENTITY_2};
-			   		getContentResolver().update(WordDefinationProvider.CONTENT_URI, null, null, selectionArgs);
+			   	    String[] selectionArgs = new String[] {""+currentWord, ""+curr_ridx/*, IDENTITY_2*/};
+			   		getContentResolver().update(WordDefinationProvider.CONTENT_URI, null, IDENTITY_2, selectionArgs);
 			   		text =  " \"" + currentWord + "\" added to memorized word list ";
 			   				   					   		
 			   		lrn_lines[curr_ridx-1] = 1;
@@ -451,8 +451,8 @@ public class MainSearchWordActivity extends Activity {
 			   						   	
 			   	if(memory1def0 == true)
 			   	{
-			   		String[] selectionArgs = new String[] {""+currentWord, IDENTITY_1};
-			   		getContentResolver().update(WordDefinationProvider.CONTENT_URI, null, null, selectionArgs);
+			   		String[] selectionArgs = new String[] {""+currentWord, ""+curr_ridx/*, IDENTITY_1*/};
+			   		getContentResolver().update(WordDefinationProvider.CONTENT_URI, null, IDENTITY_1, selectionArgs);
 	    	   		text =  " \"" + currentWord + "\" removed from memorized word list ";
 	    	   		 		
 		    		lrn_lines[curr_ridx-1] = 0;
@@ -477,10 +477,10 @@ public class MainSearchWordActivity extends Activity {
 				Toast toast = Toast.makeText(view.getContext(), text, Toast.LENGTH_SHORT);
 				toast.show();
 				
-				Log.e(TAG, "+++++++++++++++++++++++++");
-				Log.e(TAG, "def: " + def_total_cont);
-				Log.e(TAG, "usr: " + usr_total_cont);
-				Log.e(TAG, "+++++++++++++++++++++++++");
+				//Log.e(TAG, "+++++++++++++++++++++++++");
+				//Log.e(TAG, "def: " + def_total_cont);
+				//Log.e(TAG, "usr: " + usr_total_cont);
+				//Log.e(TAG, "+++++++++++++++++++++++++");
 				SharedPreferences.Editor editor = app_pref.edit();
 				editor.putInt("DEF_LINE_CNT", def_total_cont);
 				editor.putInt("USR_LINE_CNT", usr_total_cont);
@@ -499,8 +499,8 @@ public class MainSearchWordActivity extends Activity {
 				{
 					//show the next line
 					//curr_line_count++;
-					Log.e(TAG, "line >>>> " + line);
-					Log.e(TAG, "count >>>> " + curr_cursor.getCount());
+				//	Log.e(TAG, "line >>>> " + line);
+				//	Log.e(TAG, "count >>>> " + curr_cursor.getCount());
 					
 					curr_cursor.moveToPosition(line-1);
 					dsipalyLine(curr_line_count,1);
@@ -512,8 +512,8 @@ public class MainSearchWordActivity extends Activity {
 	    // for next word
 		btnNxt.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
-				Log.e(TAG, " btnNxt +++" );
-				Log.e(TAG," Total count >>> " + curr_cursor.getCount());
+				//Log.e(TAG, " btnNxt +++" );
+			//Log.e(TAG," Total count >>> " + curr_cursor.getCount());
 					
 				dsipalyLine(curr_line_count,1);
      		}
@@ -522,8 +522,8 @@ public class MainSearchWordActivity extends Activity {
 		btnBck.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				// Get the ViewFlipper from the layout
-				Log.e(TAG, " btnBck +++" );
-				Log.e(TAG," Total count >>> " + curr_cursor.getCount());
+			//	Log.e(TAG, " btnBck +++" );
+			//	Log.e(TAG," Total count >>> " + curr_cursor.getCount());
 				
 				dsipalyLine(curr_line_count,0);
 				}
@@ -537,75 +537,60 @@ public class MainSearchWordActivity extends Activity {
         // to deliver the intent if this actvity is currently the foreground activity when
         // invoked again (when the user executes a search from this activity, we don't create
         // a new instance of this activity, so the system delivers the search intent here)
-    	Log.e(TAG, " +++ onNewIntent +++");
+    	//Log.e(TAG, " +++ onNewIntent +++");
         handleIntent(intent, mloaded);
     }
 
     private void handleIntent(Intent intent, boolean mloaded) {
-    	Log.e(TAG, "handleIntent +++ ");
-    	Log.e(TAG, "intent.getAction() : " + intent.getAction());
+    	//Log.e(TAG, "handleIntent +++ ");
+    	//Log.e(TAG, "intent.getAction() : " + intent.getAction());
     	ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);
-    	if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-    		
-    			Log.e(TAG," --- ACTION_VIEW ---");
+    	if (Intent.ACTION_VIEW.equals(intent.getAction())) 
+    	{
+    		//	Log.e(TAG," --- ACTION_VIEW ---");
     			// handles a click on a search suggestion; launches activity to show word
     			//vf.setAnimation(AnimationUtils.loadAnimation(this.getApplicationContext(), R.anim.push_left_in));
     			//vf.showNext();
     			search1default0 = true;
  
-    			//Uri uri = getIntent().getData();
-    			//intent.getData();
-       			//Log.e(TAG, "uri: " + intent.getData());
-    			//String[] srowNum = new String[] {uri.getLastPathSegment()};
-    			//Log.e(TAG,srowNum[0] + " " + Integer.valueOf(srowNum[0]));
-    			
-    			//rowNum =  Integer.valueOf(srowNum[0]) - 1;
-    			
-    			
-    			//Intent wordIntent = new Intent(this, ShowWordDefActivity.class);
-    			//wordIntent.setData(intent.getData());
-    			//wordIntent.putExtra("VIEW", view);
-    			//wordIntent.putExtra("SEARCH", true );
-    			//startActivity(wordIntent);
-    			//finish();
-    	    } else if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+    	 } else if (Intent.ACTION_SEARCH.equals(intent.getAction())) 
+    	 {
     	    	// handles a search query
+    		    if(search_click == false)
+    		    {
     	    	vf.showPrevious();
-    	    	Log.e(TAG," --- ACTION_SEARCH ---");
+    	    	//Log.e(TAG," --- ACTION_SEARCH ---");
     	    	String query = intent.getStringExtra(SearchManager.QUERY);
-    	    	Log.e(TAG," query = "+query);
+    	    	//Log.e(TAG," query = "+query);
     	    	showResults(query);
-    	    	//vf.setAnimation(AnimationUtils.loadAnimation(this.getApplicationContext(), R.anim.push_left_in));
-    	    }else
-    	    {
-    	    	//Intent wordIntent = new Intent(this, ShowWordDefActivity.class);
-    			//wordIntent.setData(intent.getData());
-    			// this will tell that this is not from the search option
-    			//wordIntent.putExtra("VIEW", view);
-    			//wordIntent.putExtra("SEARCH", false );
-      	        //startActivity(wordIntent);
-    			//finish();
-    	    	vf.setAnimation(AnimationUtils.loadAnimation(this.getApplicationContext(), R.anim.push_left_in));
+    	    	search_click = true;
+    	    	search1default0 = false;
+    		    }else {
+    		    	search_click = false;
+    		    	vf.setAnimation(AnimationUtils.loadAnimation(this.getApplicationContext(), R.anim.push_left_in));
+        			vf.showNext();
+        			search1default0 = true;
+    		    	
+    		    }
+	
+    	  }else
+    	  {
+    	       	vf.setAnimation(AnimationUtils.loadAnimation(this.getApplicationContext(), R.anim.push_left_in));
     			vf.showNext();
     			search1default0 = false;
-      	    }
-    	
-    	
-
+      	  }
     	Bundle bundle = getIntent().getExtras();
-    	
-
     	memory1def0 = bundle.getBoolean("VIEW");
     	//search1default0 = bundle.getBoolean("SEARCH");
         int rowNum = 0;
-  
+        //Log.e(TAG, "6666666666666666666 search1default0 " + search1default0);
     	if(search1default0 == true)
 		{
 			Uri uri = intent.getData();
-		  	Log.e(TAG, "" + 1);
-			Log.e(TAG, "uri: " + uri);
+		  	//Log.e(TAG, "" + 1);
+			//Log.e(TAG, "uri: " + uri);
 			String[] srowNum = new String[] {uri.getLastPathSegment()};
-			Log.e(TAG,srowNum[0] + " " + Integer.valueOf(srowNum[0]));
+			//Log.e(TAG,srowNum[0] + " " + Integer.valueOf(srowNum[0]));
 			
 			rowNum =  Integer.valueOf(srowNum[0]) - 1;
 			int dec = 0;
@@ -627,7 +612,7 @@ public class MainSearchWordActivity extends Activity {
 				}
 			}
 			rowNum = rowNum - dec;
-			Log.e(TAG, "''''''" + rowNum + " " + dec);
+		//	Log.e(TAG, "''''''" + rowNum + " " + dec);
 			
 		}else
         {
@@ -644,7 +629,7 @@ public class MainSearchWordActivity extends Activity {
         	
         }
     	displayWord(rowNum);
-        Log.e(TAG, "handleIntent --");
+        //Log.e(TAG, "handleIntent --");
     }
 
     /**
@@ -652,7 +637,7 @@ public class MainSearchWordActivity extends Activity {
      * @param query The search query
      */
      private void showResults(String query) {
-        Log.e(TAG, "+++++++++++++++++++showResults ++++++++++++++++++++");
+       // Log.e(TAG, "++++++++++showResults ++++++++++" + query);
         Cursor cursor = null;
         if(view == false)
         {
@@ -665,7 +650,6 @@ public class MainSearchWordActivity extends Activity {
                     new String[] {query, IDENTITY_2}, null);
 	
         }
-
         if (cursor == null) {
             // There are no results
             mTextView.setText(getString(R.string.no_results, new Object[] {query}));
@@ -674,10 +658,14 @@ public class MainSearchWordActivity extends Activity {
         	//vf.showNext();
             // Display the number of results
             int count = cursor.getCount();
+            //Log.e(TAG, "2222222222222222222222" + count);
+            
             String countString = getResources().getQuantityString(R.plurals.search_results,
                                     count, new Object[] {count, query});
+           
             mTextView.setText(countString);
-
+            
+            //Log.e(TAG, "44444444444444444");
             // Specify the columns we want to display in the result
             String[] from = new String[] { WordDatabase.KEY_WORD,
                                            WordDatabase.KEY_DEFINITION };
@@ -692,6 +680,7 @@ public class MainSearchWordActivity extends Activity {
             
             mListView.setAdapter(words);
 
+            //Log.e(TAG, "5555555555555555");
             // Define the on-click listener for the list items
             mListView.setOnItemClickListener(new OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -699,12 +688,24 @@ public class MainSearchWordActivity extends Activity {
                     //Intent wordIntent = new Intent(getApplicationContext(), ShowWordDefActivity.class);
                     Uri data = Uri.withAppendedPath(WordDefinationProvider.CONTENT_URI,
                                                     String.valueOf(id));
-                    Log.e(TAG, "" + data);
+           //         Log.e(TAG, ":  " + data);
                    // setContentView(R.layout.search);
                    // ViewFlipper vf = (ViewFlipper) findViewById(R.id.details);
-                 //	vf.showNext();
-                    //wordIntent.setData(data);
-                    //startActivity(wordIntent);
+                   //	vf.showNext();
+                   //wordIntent.setData(data);
+                    
+                    
+             	   Intent searchIntent = new Intent(getApplicationContext(), MainSearchWordActivity.class);
+            	   searchIntent.setData(data);
+            	   searchIntent.setAction("android.intent.action.SEARCH");
+            	   //searchIntent.putExtra("VIEW", view);
+            	   //startActivity(searchIntent);
+             //	   Log.e(TAG,"Starting Activity");
+            	   handleIntent(searchIntent,mloaded);
+            	   
+                   //startActivity(wordIntent);
+                   // Log.e(TAG, " +++ onNewIntent +++");
+                   // handleIntent(intent, mloaded);
                 }
             });
         }
@@ -732,7 +733,7 @@ public class MainSearchWordActivity extends Activity {
     @Override
  	public void onPause() {
  		super.onPause();
- 		Log.v("wovo", " +++ onPause +++");
+ 		//Log.v("wovo", " +++ onPause +++");
  		if(search == false)
  		{
  			readWriteLrnWordList(1);
@@ -742,7 +743,7 @@ public class MainSearchWordActivity extends Activity {
  	@Override
  	public void onResume() {
  		super.onResume();
- 		Log.v("wovo", " +++ onResume +++");
+ 		///Log.v("wovo", " +++ onResume +++");
  		if(search ==false)
  		{
  			readWriteLrnWordList(0);
@@ -755,14 +756,14 @@ public class MainSearchWordActivity extends Activity {
  	
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-    	Log.e(TAG, "" + item.getItemId());
+    	//Log.e(TAG, "" + item.getItemId());
         switch (item.getItemId()) {
             case R.id.search:
-            	Log.e(TAG,"R.id.search:");
+         //   	Log.e(TAG,"R.id.search:");
                 onSearchRequested();
                 return true;
             case android.R.id.home:
-             	Log.e(TAG,"R.id.home:");
+        //     	Log.e(TAG,"R.id.home:");
                 Intent intent = new Intent(this, WovoActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);

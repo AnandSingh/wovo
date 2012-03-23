@@ -2,23 +2,32 @@ package com.anand.embivid.wovo;
 
 
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import com.google.ads.*;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
-import android.util.Log;
+//import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,7 +35,7 @@ import android.widget.ViewFlipper;
 
 public class WovoActivity extends Activity {
     private static final String TAG = "WovoActivity";//"DictionaryDatabase";
-	
+    private static final String IDENTITY_1 = "1";
 	SharedPreferences app_pref = null;
 	private Button btnRst;
 	private Button btnYes;
@@ -35,6 +44,7 @@ public class WovoActivity extends Activity {
 	private Button btnMem;
 	private Button btnDft;
 	private Button btnLrn;
+    private ProgressBar progBar;
 
 	private int Def0User1 = 0;
 	private int flip = 1;
@@ -47,11 +57,13 @@ public class WovoActivity extends Activity {
 	private String line = null;
 	private WordDatabase mDictionary;
     private Boolean databaseLoaded = false;
+   // private ProgressDialog progDailog;
+
 	//private AdView adView;
 
    public void LoadSearchAcitvity(boolean view)
    {
-	   databaseLoaded = app_pref.getBoolean("DB_LOADED", false);
+	    databaseLoaded = app_pref.getBoolean("DB_LOADED", false);
 		if(databaseLoaded == false)
 		{
 			CharSequence text = "Loading Database ...";
@@ -59,12 +71,12 @@ public class WovoActivity extends Activity {
 			toast.show();
 		}else{
 	   CharSequence text = null;
-	   Log.e(TAG, "LoadSearchAcitvity ++");
+	   //Log.e(TAG, "LoadSearchAcitvity ++");
 	   boolean flag = false;
-	   Log.e(TAG, "+++++++++++++++++++++++++");
-	   Log.e(TAG, "def: " + app_pref.getInt("DEF_LINE_CNT", 0));
-	   Log.e(TAG, "usr: " + app_pref.getInt("USR_LINE_CNT", 0));
-	   Log.e(TAG, "+++++++++++++++++++++++++");
+	   //Log.e(TAG, "+++++++++++++++++++++++++");
+	   //Log.e(TAG, "def: " + app_pref.getInt("DEF_LINE_CNT", 0));
+	   //Log.e(TAG, "usr: " + app_pref.getInt("USR_LINE_CNT", 0));
+	   //Log.e(TAG, "+++++++++++++++++++++++++");
 	   
        if(view == false)
        {
@@ -129,8 +141,8 @@ public class WovoActivity extends Activity {
 		tvWrd = (TextView) findViewById(R.id.word);
 		tvDef = (TextView) findViewById(R.id.definition);
 		tvDebug = (TextView) findViewById(R.id.num);
-		//adView = (AdView) findViewById(R.id.adView);
-
+		progBar = (ProgressBar) findViewById(R.id.progressBar1);
+	
 		tvDebug.setText("");
 		databaseLoaded = app_pref.getBoolean("DB_LOADED", false);
 	
@@ -172,7 +184,13 @@ public class WovoActivity extends Activity {
 			}
 		});
 
+		/*private Handler handler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+		//	txt.setText("Processing Done");
 
+			}
+		};*/
 
 
 		btnRst.setOnClickListener(new View.OnClickListener() {
@@ -197,14 +215,88 @@ public class WovoActivity extends Activity {
 		
 		btnYes.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
+				/*progDailog = ProgressDialog.show(getApplicationContext(),
+						"Reseting please wait....",
+						true);*/
+				//progBar.
+
 				SharedPreferences.Editor editor = app_pref.edit();
 				editor.putInt("DEF_LINE_CNT", 175);
-				editor.putInt("USR_LINE_CNT", 175);
-				editor.putInt("def_Line", 1);
-				editor.putInt("user_Line", -1); 
+				editor.putInt("USR_LINE_CNT", 0);
+				editor.putInt("def_Line", 0);
+				editor.putInt("user_Line", 0); 
 				editor.commit();
-				File lrn_file = new File("/data/data/com.anand.embivid.wovo/lrn.dat");
+					
+				Uri uri = Uri.withAppendedPath(WordDefinationProvider.CONTENT_URI,
+			            String.valueOf(1));
+				String[] selectionArgs = new String[] {uri.getLastPathSegment(), "2"};
+				Cursor curr_cursor = managedQuery(uri, null, null, selectionArgs, null);
+				
+		    	//String[] selectionArgs1 = new String[] {uri.getLastPathSegment(), "1"};
+		    	//Cursor def_cursor = managedQuery(uri, null, null, selectionArgs1, null);
+		    	if(curr_cursor != null)
+		    	{
+		    		 curr_cursor.moveToFirst();
+		    //		 Log.e(TAG, "" + curr_cursor.getCount());
+		    		 int i =0;
+		    		 while(!curr_cursor.isAfterLast())
+		    		 {
+		    		  
+		    			int wIndex = curr_cursor.getColumnIndexOrThrow(WordDatabase.KEY_WORD);
+		    	
+		    		    i++;
+		    		   	selectionArgs[0] = curr_cursor.getString(wIndex);
+		    //		    Log.e(TAG, "Reset " + i + ". " + selectionArgs[0]);
+				   		getContentResolver().update(WordDefinationProvider.CONTENT_URI, null, IDENTITY_1, selectionArgs);
+		    		    curr_cursor.moveToNext();
+		    		 }
+		    		 curr_cursor.close();
+		    		 
+		    	}
+		    	
+		    	File lrn_file = new File("/data/data/com.anand.embivid.wovo/lrn.dat");
 				lrn_file.delete();
+				/*
+				try {
+				
+				Process process = Runtime.getRuntime().exec("sh");
+				DataOutputStream os = new DataOutputStream(process.getOutputStream());
+				os.writeBytes("chmod 755 /data/data/com.anand.embivid.wovo/lrn.dat\n");
+
+				os.writeBytes("exit\n");
+				os.flush(); 
+				
+				DataInputStream data_in    = new DataInputStream (new FileInputStream (lrn_file) );
+				int lrn_cnt = 0;
+				//int[] lrn_lines = new int[176];//[4759];
+				while (true) {
+					try {
+						//lrn_lines[lrn_cnt] = data_in.readInt ();
+						Log.d("wovo", "r*" + lrn_cnt + ". " + data_in.readInt ());
+						if(data_in.readInt () == 1);
+						{
+							Log.e("TAG", "Reset row" + lrn_cnt);
+							//Uri uri = Uri.withAppendedPath(WordDefinationProvider.CONTENT_URI,
+					        //        String.valueOf(curr_cursor.getPosition()+1));
+							//	getContentResolver().update(WordDefinationProvider.CONTENT_URI, null, IDENTITY_1, selectionArgs);
+							//String[] selectionArgs = new String[] {""+currentWord, IDENTITY_1};
+					   		//getContentResolver().update(WordDefinationProvider.CONTENT_URI, null, null, selectionArgs);
+						}
+						lrn_cnt++;
+					}
+					catch (EOFException eof) {
+						System.out.println ("End of File");
+
+						break;
+					}
+				}
+				
+				
+				} catch (Exception e) {
+					Log.e("wovo", "Exception");
+					Log.e("wovo", e.toString());
+				//	return;
+				}*/
 				//Lists.getInstance().reset();
 				Def0User1 = 0;
 				flip = 1;

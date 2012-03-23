@@ -10,7 +10,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
-import android.util.Log;
+//import android.util.Log;
 
 
 /**
@@ -48,7 +48,7 @@ public class WordDefinationProvider extends ContentProvider {
      */
     private static UriMatcher buildUriMatcher() {
     	
-    	 Log.e(TAG, " +++ buildUriMatcher +++");
+    	// Log.e(TAG, " +++ buildUriMatcher +++");
         UriMatcher matcher =  new UriMatcher(UriMatcher.NO_MATCH);
         // to get definitions...
         matcher.addURI(AUTHORITY, "wovodb", SEARCH_WORDS);
@@ -70,7 +70,7 @@ public class WordDefinationProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-    	Log.e(TAG, " +++ onCreate +++");
+    //	Log.e(TAG, " +++ onCreate +++");
        	mDictionary = new WordDatabase(getContext());
         return true;
     }
@@ -86,8 +86,8 @@ public class WordDefinationProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
                         String sortOrder) {
 
-    	Log.e(TAG, " +++ query +++");
-    	Log.e(TAG, "" + sURIMatcher.match(uri));
+    //	Log.e(TAG, " +++ query +++");
+   // 	Log.e(TAG, "sURIMatcher : " + sURIMatcher.match(uri));
         // Use the UriMatcher to see what kind of query we have and format the db query accordingly
         switch (sURIMatcher.match(uri)) {
             
@@ -118,6 +118,8 @@ public class WordDefinationProvider extends ContentProvider {
                 
                 return getSuggestions(selargs);
             case SEARCH_WORDS:
+          //  	Log.e(TAG,"selArgs : " + selectionArgs[0]);
+            	
                	if (selectionArgs == null) {
                   throw new IllegalArgumentException(
                       "selectionArgs must be provided for the Uri: " + uri);
@@ -126,6 +128,7 @@ public class WordDefinationProvider extends ContentProvider {
                	// Log.e(TAG, "2." + selectionArgs[1]);
                  return search(selectionArgs);
             case GET_WORD:
+      //      	Log.d(TAG, "3333333333 uri: " + uri);
                 return getWord(uri, selectionArgs);
             case REFRESH_SHORTCUT:
                 return refreshShortcut(uri, selectionArgs);
@@ -136,7 +139,7 @@ public class WordDefinationProvider extends ContentProvider {
 
     private Cursor getSuggestions(String[] query) {
     
-      Log.e(TAG, "+++ getSuggestions +++");
+     // Log.e(TAG, "+++ getSuggestions +++");
       query[0] = query[0].toLowerCase();
       //Log.e(TAG, "" + query[0]);
       //Log.e(TAG, "" + query[1]);
@@ -154,7 +157,7 @@ public class WordDefinationProvider extends ContentProvider {
 
     private Cursor search(String[] query)
     {
-      Log.e(TAG, "+++ search +++");
+     // Log.e(TAG, "+++ search +++");
       query[0] = query[0].toLowerCase();
      
       String[] columns = new String[] {
@@ -168,9 +171,9 @@ public class WordDefinationProvider extends ContentProvider {
 
     private Cursor getWord(Uri uri, String[] selectionArgs)
     {
-      Log.e(TAG, "getWord ++ ");
+     // Log.e(TAG, "getWord ++ ");
      	//Log.e(TAG, "uri: " + uri);
-      String rowId = uri.getLastPathSegment();
+   //   String rowId = uri.getLastPathSegment();
       //Log.e(TAG, "rowId : " + rowId);
      
       String[] columns = new String[] {
@@ -197,7 +200,7 @@ public class WordDefinationProvider extends ContentProvider {
        * suggestion query.
        */
    //   Log.e(TAG, "refreshShortcut +++");
-      String rowId = uri.getLastPathSegment();
+    //  String rowId = uri.getLastPathSegment();
       String[] columns = new String[] {
           BaseColumns._ID,
           WordDatabase.KEY_WORD,
@@ -253,10 +256,10 @@ public class WordDefinationProvider extends ContentProvider {
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
     	//Log.e(TAG, "update ++");
     
-    	String rowId = uri.getLastPathSegment();
+   // 	String rowId = uri.getLastPathSegment();
     	//Log.e(TAG, "uri:"+ uri + " rowId:" + rowId);
     	//Log.e(TAG, "sURIMatcher.match(uri) : " + sURIMatcher.match(uri));
-    	return mDictionary.updateIndenty( selectionArgs);
+    	return mDictionary.updateIndenty(selection, selectionArgs);
     }
   
 

@@ -5,13 +5,13 @@
     <string name="hello">Welcome</string>
     <string name="app_name">GRE WoVo Lite !</string>
     <string name="activity_label">GRE WoVo Lite !</string>
-    <string name="search_string"> Search Word </string>
+    <string name="search_string">   Search Word   </string>
 
     <!-- The label for use as a searchable item -->
-    <string name="search_label">Dictionary</string>
+    <string name="search_label">WoVo</string>
 
     <!-- The hint text that appears in the search box. -->
-    <string name="search_hint">Search the dictionary</string>
+    <string name="search_hint">Search Words</string>
 
     <!-- The menu entry that invokes search. -->
     <string name="menu_search">Search</string>

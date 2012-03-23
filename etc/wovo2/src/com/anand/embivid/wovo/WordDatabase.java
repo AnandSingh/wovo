@@ -13,7 +13,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
-import android.util.Log;
+//import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -63,7 +63,7 @@ public class WordDatabase {
      */
     public WordDatabase(Context context) {
     	
-       	Log.e(TAG, "context: "+ context);
+    //   	Log.e(TAG, "context: "+ context);
     	app_context = context;
     	mDatabaseOpenHelper = new DictionaryOpenHelper(context);
     }
@@ -97,11 +97,11 @@ public class WordDatabase {
      * @return Cursor positioned to matching word, or null if not found.
      */
  
-    public int updateIndenty(String[] selectionArgs) {
+    public int updateIndenty(String value, String[] selectionArgs) {
     	
-    //	Log.e(TAG,"updateIndenty ++");
-    //	Log.e(TAG, "selectionArgs[0]: " + selectionArgs[0]);
-    //	Log.e(TAG, "selectionArgs[1]: " + selectionArgs[1]);
+    	//Log.e(TAG,"updateIndenty ++");
+    	//Log.e(TAG, "selectionArgs[0]: " + selectionArgs[0]);
+    	//Log.e(TAG, "selectionArgs[1]: " + selectionArgs[1]);
         //String selection = "rowid = ?";
         //String[] selectionArgs = new String[] {rowId};
 
@@ -110,10 +110,11 @@ public class WordDatabase {
     	//Log.e(TAG,"word: "+ word);
         //Log.e(TAG,"def: " + definition);
     	//initialValues.put(KEY_IDENTITY, selectionArgs[0]);
-        initialValues.put(KEY_IDENTITY, selectionArgs[1]);
+        initialValues.put(KEY_IDENTITY, value);
 
         SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
     	return db.update(FTS_VIRTUAL_TABLE, initialValues, KEY_WORD+"= ?", new String []{selectionArgs[0]});
+        //return db.update(FTS_VIRTUAL_TABLE, initialValues, KEY_WORD+"= ?" + " OR " + "rowid = ?", selectionArgs);
     	
         /* This builds a query that looks like:
          *     SELECT <columns> FROM <table> WHERE rowid = <rowId>
@@ -122,14 +123,14 @@ public class WordDatabase {
 
    public Cursor getWord(String[] query, String[] columns) {
     	
-    //	Log.e(TAG,"getWord ++");
+    	//Log.e(TAG,"getWord ++");
     	//Log.e(TAG, "rowId: " + rowId);
        
     	//String selection = "rowid = ?";
         //String[] selectionArgs = new String[] {rowId};
         
     	//Log.e(TAG,"getWordMatches ++");
-    	Log.e(TAG, "query: " + query[0]  + ", " + query[1] );
+    	//Log.e(TAG, "query: " + query[0]  + ", " + query[1] );
     	
         String selection = "rowid >= ?" + " AND " + KEY_IDENTITY + "=?" ;
         String[] selectionArgs = new String[] {query[0], query[1]};
@@ -196,7 +197,7 @@ public class WordDatabase {
         Cursor cursor = builder.query(mDatabaseOpenHelper.getReadableDatabase(),
                 columns, selection, selectionArgs, null, null, null);
         
-        Log.e(TAG, "cursor :" + cursor);
+       // Log.e(TAG, "cursor :" + cursor);
        
         if (cursor == null) {
             return null;
@@ -240,7 +241,7 @@ public class WordDatabase {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            Log.e(TAG, "-------------  OnCreate SQLite database -------");
+         //   Log.e(TAG, "-------------  OnCreate SQLite database -------");
         	mDatabase = db;
             mDatabase.execSQL(FTS_TABLE_CREATE);
             // loadDictionary();
@@ -260,7 +261,7 @@ public class WordDatabase {
          * Starts a thread to load the database table with words
          */
         private void loadWords() throws IOException {
-            Log.e(TAG, "Loading words.....");
+           // Log.e(TAG, "Loading words.....");
             
             final Resources resources = mHelperContext.getResources();
             InputStream inputStream = resources.openRawResource(R.raw.list);
@@ -282,7 +283,7 @@ public class WordDatabase {
             } finally {
                 reader.close();
             }
-            Log.d(TAG, "DONE loading words.");
+          //  Log.d(TAG, "DONE loading words.");
             SharedPreferences app_pref = PreferenceManager.getDefaultSharedPreferences(app_context);
     		SharedPreferences.Editor editor = app_pref.edit();
     		editor.putInt("DEF_LINE_CNT", 175);
@@ -306,8 +307,8 @@ public class WordDatabase {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            Log.e(TAG, "Upgrading database from version " + oldVersion + " to "
-                    + newVersion + ", which will destroy all old data");
+         //   Log.e(TAG, "Upgrading database from version " + oldVersion + " to "
+         //          + newVersion + ", which will destroy all old data");
             db.execSQL("DROP TABLE IF EXISTS " + FTS_VIRTUAL_TABLE);
             onCreate(db);
         }
