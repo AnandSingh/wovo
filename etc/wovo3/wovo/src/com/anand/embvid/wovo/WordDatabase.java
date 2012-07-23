@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -66,6 +67,7 @@ public class WordDatabase {
     //   	Log.e(TAG, "context: "+ context);
     	app_context = context;
     	mDatabaseOpenHelper = new DictionaryOpenHelper(context);
+    	
     }
 
 
@@ -202,9 +204,11 @@ public class WordDatabase {
     /**
      * This creates/opens the database.
      */
-    private static class DictionaryOpenHelper extends SQLiteOpenHelper {
+    private static class DictionaryOpenHelper extends AssestHelper {
 
         private final Context mHelperContext;
+             
+        //private SQLiteDatabase myDataBase; 
         //private SQLiteDatabase mDatabase;
 
         /* Note that FTS3 does not support column constraints and thus, you cannot
@@ -217,70 +221,20 @@ public class WordDatabase {
                     KEY_WORD + ", " +
                     KEY_DEFINITION  + ", " + KEY_IDENTITY + ");";
         
-
-
-        
-
         DictionaryOpenHelper(Context context) {
             super(context, DB_NAME, null, DATABASE_VERSION);
             mHelperContext = context;
+            SharedPreferences app_pref = PreferenceManager.getDefaultSharedPreferences(app_context);
+          		SharedPreferences.Editor editor = app_pref.edit();
+          		editor.putInt("DEF_LINE_CNT", MAX_WORDS);
+          		editor.putInt("USR_LINE_CNT", 0);
+      			editor.putBoolean("DB_LOADED", true);
+          		editor.commit();
+          	    Log.d(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>. DONE loading words.");
         }
 
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-           
-          Log.e(TAG, "-------------  OnCreate SQLite database -------:"+db);
-        	
-            
-     /*      boolean dbExist = checkDataBase();
-        	
-        	if(dbExist)
-        	{
-        		mDatabase = db;
-        		Log.e(TAG, "Database exist  !!!");
-                SharedPreferences app_pref = PreferenceManager.getDefaultSharedPreferences(app_context);
-        		SharedPreferences.Editor editor = app_pref.edit();
-        		editor.putInt("DEF_LINE_CNT", MAX_WORDS);
-        		editor.putInt("USR_LINE_CNT", 0);
-    			editor.putBoolean("DB_LOADED", true);
-        		editor.commit();
-        	    Log.d(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>. DONE loading words.");
-        	}else
-        	{
-        		//this.getReadableDatabase();
-        	   	try {
-            		mDatabase = db;
-                    mDatabase.execSQL(FTS_TABLE_CREATE);
-        			copyDataBase();
-        			Log.e(TAG, "Done opying of data base");
-                    SharedPreferences app_pref = PreferenceManager.getDefaultSharedPreferences(app_context);
-            		SharedPreferences.Editor editor = app_pref.edit();
-            		editor.putInt("DEF_LINE_CNT", MAX_WORDS);
-            		editor.putInt("USR_LINE_CNT", 0);
-        			editor.putBoolean("DB_LOADED", true);
-            		editor.commit();
-            	    Log.d(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>. DONE loading words.");
-     
-        		} catch (IOException e) {
-        			throw new Error("Error copying database");
-            	}
-        	}*/
-
-			 //   Log.e(TAG, "-------------  OnCreate SQLite database -------");
-          mDatabase = db;
-          mDatabase.execSQL(FTS_TABLE_CREATE);
-          new Thread(new Runnable() {
-                public void run() {
-                    try {
-                        loadWords();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            }).start();
-          
-        }
-        
+  
+      
         /*
         private void copyDataBase() throws IOException{
         	 Log.e("TAG", "copyDataBase +++");
@@ -378,13 +332,36 @@ public class WordDatabase {
     
             return mDatabase.insert(FTS_VIRTUAL_TABLE, null, initialValues);
         }
-
+        
+        @Override
+    	public synchronized void close() {
+     
+        	    //if(myDataBase != null)
+        		//    myDataBase.close();
+     
+        	    super.close();
+     
+    	}
+        
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-         //   Log.e(TAG, "Upgrading database from version " + oldVersion + " to "
-         //          + newVersion + ", which will destroy all old data");
-            db.execSQL("DROP TABLE IF EXISTS " + FTS_VIRTUAL_TABLE);
-            onCreate(db);
+            //db.execSQL("DROP TABLE IF EXISTS " + FTS_VIRTUAL_TABLE);
+            //onCreate(db);
         }
     }
+
+/*
+	@Override
+	public void onCreate(SQLiteDatabase arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		// TODO Auto-generated method stub
+		
+	}
+	*/
 }

@@ -48,7 +48,7 @@ public class MainSearchWordActivity extends Activity {
 	private static final String IDENTITY_1 = "1";
 	private static final String IDENTITY_2 = "2";
 	private static final int MAX_WORDS = 4759;
-	private static final int MAX_ROW = 25;
+	private static final int MAX_ROW = 4759;//25;
 	private TextView mTextView;
 	private ListView mListView;
 	private boolean mloaded = false;
