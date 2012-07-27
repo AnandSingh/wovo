@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
+    
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent" android:background="#ffffff"
+	android:gravity="center_horizontal|center_vertical" android:weightSum="1">
+
+	<ViewFlipper android:id="@+id/details"
+		android:layout_width="fill_parent" android:layout_height="fill_parent">
+		<LinearLayout
+		android:id="@+id/linearLayout1" 
+		android:orientation="vertical"
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+		android:background="#ffffff" android:gravity="center_horizontal|center_vertical"
+		android:weightSum="1">
+
+			
+         
+		<TextView android:id="@+id/tv_country" android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:textSize="25px"
+				android:layout_marginTop="10dip" android:gravity="center_vertical|center_horizontal"
+				android:text="  Learn GRE GMAT Words  ">
+	    </TextView>
+
+
+			<Button android:text="   Learn Words  " android:id="@+id/button_default"
+				android:layout_width="200dip" android:layout_marginTop="10dip"
+				android:textSize="20dip" android:layout_height="55dip">
+			</Button>
+			<Button android:text="    Revise Words   " android:id="@+id/button_learned"
+				android:layout_width="200dip" android:textSize="20dip"
+				android:layout_marginTop="10dip" android:layout_height="55dip">
+			</Button>
+			<Button android:text="    Reset    " android:id="@+id/button_reset"
+				android:layout_width="200dip" android:textSize="20dip"
+				android:layout_marginTop="10dip" android:layout_height="55dip">
+			</Button>
+			<TextView android:id="@+id/tv_embvid" android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:textSize="12px"
+				android:layout_marginTop="10dip" android:gravity="center_vertical|center_horizontal"
+				android:text=" © copyright 2011 - Anand">
+			</TextView>
+			
+			 <com.google.ads.AdView android:id="@+id/adView"
+	                         android:layout_width="wrap_content"
+	                         android:layout_height="wrap_content"
+	                         android:layout_marginBottom="2dip"
+	                         ads:adUnitId="a14eb39eac9a049"
+	                         ads:adSize="BANNER"
+	                         ads:loadAdOnCreate="true"
+	                         />
+		</LinearLayout>
+
+		<LinearLayout 
+		android:id="@+id/linearLayout1"
+		android:orientation="vertical"
+			android:layout_width="fill_parent" android:layout_height="fill_parent"
+			android:background="#ffffff" android:gravity="center_horizontal|center_vertical"
+			android:weightSum="1">
+            <ListView
+            android:id="@+id/list"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+			
+			<TextView
+			    android:id="@+id/num" android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:text="@string/hello"
+				android:textColor="#000000" android:textSize="15sp"
+				android:layout_marginLeft="8dip" 
+				android:layout_marginTop="6dip"/>
+			<TextView android:id="@+id/word" android:textAppearance="?android:attr/textAppearanceLarge"
+				android:textColor="#000000" android:textSize="25sp"
+				android:layout_height="wrap_content" android:text="@string/hello"
+				android:gravity="center_vertical|center_horizontal"
+				android:layout_width="250dip" 
+				/>
+
+			<TextView android:id="@+id/definition"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				android:textColor="#000000" android:layout_height="130dip"
+				android:text="@string/hello"
+				android:gravity="center_vertical|center_horizontal"
+				android:layout_width="270dip" />
+
+			<Button android:text="  I have learned this word !  "
+				android:layout_width="wrap_content" android:id="@+id/button_mem"
+				android:layout_height="50dip" android:textSize="20dip"
+				android:layout_marginTop="8dip" android:layout_weight="0.10"
+				></Button>
+
+			<LinearLayout android:id="@+id/linearLayout1"
+				android:layout_width="match_parent" android:layout_height="wrap_content"
+				android:weightSum="1" android:layout_marginTop="2dip"
+				android:gravity="center_horizontal|center_vertical">
+				<Button android:text="Back" android:layout_width="wrap_content"
+					android:id="@+id/button2" android:layout_height="78dip"
+					android:textSize="20dip" android:layout_marginTop="5dip"
+					android:layout_weight="0.32"></Button>
+				<Button android:text="Next" android:layout_width="wrap_content"
+					android:id="@+id/button1" android:textSize="20dip"
+					android:layout_weight="0.32" android:layout_height="78dip"
+
+					android:layout_marginTop="5dip"></Button>
+			</LinearLayout>
+			<com.google.ads.AdView android:id="@+id/adView"
+	                         android:layout_width="wrap_content"
+	                         android:layout_height="wrap_content"
+	                         android:layout_marginBottom="2dip"
+	                         ads:adUnitId="a14eb39eac9a049"
+	                         ads:adSize="BANNER"
+	                         ads:loadAdOnCreate="true"
+	                         />
+		</LinearLayout>
+	
+	<LinearLayout
+	android:id="@+id/linearLayout1"
+	 android:orientation="vertical"
+			android:layout_width="fill_parent" android:layout_height="fill_parent"
+			android:background="#ffffff" android:gravity="center_horizontal|center_vertical"
+			android:weightSum="1">
+			<ProgressBar
+			    android:id="@+id/progressBar1"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content" />
+
+        	<TextView android:id="@+id/rest_text2"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				android:textColor="#000000" android:layout_height="wrap_content"
+				android:text="@string/reset_text"
+				android:gravity="center_horizontal"
+				android:layout_width="220dip"
+			/>
+
+			
+			<LinearLayout 
+				android:layout_width="match_parent" android:layout_height="wrap_content"
+				android:weightSum="1" android:layout_marginTop="50dip"
+				android:gravity="center_horizontal|center_vertical">
+				
+				<Button android:text=" Yes " android:layout_width="wrap_content"
+					android:id="@+id/button_yes" android:layout_height="78dip"
+					android:textSize="20sp" 
+					android:layout_weight="0.25"></Button>
+				<Button android:text=" No " android:layout_width="wrap_content"
+					android:id="@+id/button_no" android:textSize="20sp"
+					android:layout_weight="0.25" android:layout_height="78dip"
+					android:layout_marginLeft="15dip"
+
+					></Button>
+			</LinearLayout>
+			<com.google.ads.AdView android:id="@+id/adView"
+	                         android:layout_width="wrap_content"
+	                         android:layout_height="wrap_content"
+	                         android:layout_gravity="bottom"
+	                         android:layout_marginTop="100dip"
+	                         ads:adUnitId="a14eb39eac9a049"
+	                         ads:adSize="BANNER"
+	                         ads:loadAdOnCreate="true"
+	                         />
+		</LinearLayout>
+	
+	</ViewFlipper>
+</LinearLayout>
